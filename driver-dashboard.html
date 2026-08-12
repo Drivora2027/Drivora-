@@ -6,106 +6,85 @@
 <title>DRIVORA - Driver Dashboard</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  padding:20px 14px;
+  font-family:Arial,sans-serif;
+  background:#f3f7ff;
+  color:#222;
+  text-align:center
 }
 
-body {
-  margin: 0;
-  padding: 25px 15px;
-  font-family: Arial, sans-serif;
-  background: #f3f7ff;
-  text-align: center;
-  color: #222;
+h1{color:#06f;margin:10px 0 5px}
+h2{margin:5px 0 20px}
+
+.card{
+  max-width:460px;
+  margin:18px auto;
+  padding:22px;
+  background:#fff;
+  border-radius:14px;
+  box-shadow:0 3px 15px rgba(0,0,0,.10)
 }
 
-h1 {
-  color: #0066ff;
-  margin-bottom: 5px;
+input{
+  width:100%;
+  padding:13px;
+  margin:7px 0;
+  border:1px solid #ccc;
+  border-radius:8px;
+  font-size:16px
 }
 
-h2 {
-  margin-top: 5px;
+button{
+  padding:12px 18px;
+  margin:5px;
+  border:0;
+  border-radius:8px;
+  font-size:15px;
+  cursor:pointer
 }
 
-.card {
-  max-width: 450px;
-  margin: 20px auto;
-  padding: 22px;
-  background: white;
-  border-radius: 14px;
-  box-shadow: 0 3px 15px rgba(0,0,0,0.10);
+.login{background:#06f;color:#fff}
+.available{background:#16a34a;color:#fff}
+.busy{background:#dc2626;color:#fff}
+.offline{background:#333;color:#fff}
+.accept{background:#16a34a;color:#fff}
+.reject{background:#dc2626;color:#fff}
+.location{background:#06f;color:#fff}
+.stop{background:#333;color:#fff}
+.logout{background:#555;color:#fff}
+
+#dashboard{display:none}
+
+.info{font-size:17px;margin:10px 0}
+
+.status{
+  font-size:18px;
+  font-weight:bold
 }
 
-input {
-  width: 100%;
-  padding: 13px;
-  margin: 7px 0;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 16px;
+#locationText{
+  word-break:break-word
 }
 
-button {
-  padding: 12px 18px;
-  margin: 5px;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  cursor: pointer;
+.booking{
+  text-align:left;
+  padding:15px;
+  margin:10px 0;
+  border:1px solid #ddd;
+  border-radius:10px;
+  background:#f8fafc
 }
 
-.login-btn {
-  background: #0066ff;
-  color: white;
+.booking-buttons{
+  text-align:center;
 }
 
-.available {
-  background: #16a34a;
-  color: white;
-}
-
-.busy {
-  background: #dc2626;
-  color: white;
-}
-
-.offline {
-  background: #333;
-  color: white;
-}
-
-.logout {
-  background: #555;
-  color: white;
-}
-
-.location-btn {
-  background: #0066ff;
-  color: white;
-}
-
-.stop-btn {
-  background: #333;
-  color: white;
-}
-
-#dashboard {
-  display: none;
-}
-
-.info {
-  font-size: 17px;
-  margin: 10px 0;
-}
-
-.status {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-#locationText {
-  word-break: break-word;
+.empty{
+  color:#666;
 }
 </style>
 </head>
@@ -120,32 +99,32 @@ button {
 
 <div id="loginBox" class="card">
 
-  <h3>🔐 Driver Login</h3>
+<h3>🔐 Driver Login</h3>
 
-  <input
-    type="text"
-    id="driverName"
-    placeholder="Driver Name"
-  >
+<input
+id="driverName"
+type="text"
+placeholder="Driver Name"
+>
 
-  <input
-    type="tel"
-    id="driverPhone"
-    placeholder="Phone Number"
-  >
+<input
+id="driverPhone"
+type="tel"
+placeholder="Phone Number"
+>
 
-  <input
-    type="text"
-    id="vehicle"
-    placeholder="Vehicle Number"
-  >
+<input
+id="vehicle"
+type="text"
+placeholder="Vehicle Number"
+>
 
-  <button
-    class="login-btn"
-    onclick="loginDriver()"
-  >
-    🚗 Login
-  </button>
+<button
+class="login"
+onclick="loginDriver()"
+>
+🚗 Login
+</button>
 
 </div>
 
@@ -154,361 +133,492 @@ button {
 
 <div id="dashboard">
 
-  <div class="card">
 
-    <h3>👤 Driver Information</h3>
+<!-- DRIVER INFORMATION -->
 
-    <p class="info">
-      Driver: <b id="showName">-</b>
-    </p>
+<div class="card">
 
-    <p class="info">
-      Phone: <b id="showPhone">-</b>
-    </p>
+<h3>👤 Driver Information</h3>
 
-    <p class="info">
-      Vehicle: <b id="showVehicle">-</b>
-    </p>
+<p class="info">
+Driver:
+<b id="showName">-</b>
+</p>
 
-  </div>
+<p class="info">
+Phone:
+<b id="showPhone">-</b>
+</p>
 
+<p class="info">
+Vehicle:
+<b id="showVehicle">-</b>
+</p>
 
-  <!-- DRIVER STATUS -->
-
-  <div class="card">
-
-    <h3>🚦 Driver Status</h3>
-
-    <button
-      class="available"
-      onclick="setStatus('Available')"
-    >
-      🟢 Available
-    </button>
-
-    <button
-      class="busy"
-      onclick="setStatus('Busy')"
-    >
-      🔴 Busy
-    </button>
-
-    <button
-      class="offline"
-      onclick="setStatus('Offline')"
-    >
-      ⚫ Offline
-    </button>
-
-    <p class="status">
-      Current Status:
-      <span id="status">Offline</span>
-    </p>
-
-  </div>
+</div>
 
 
-  <!-- LOCATION -->
+<!-- DRIVER STATUS -->
 
-  <div class="card">
+<div class="card">
 
-    <h3>📍 Live Driver Location</h3>
+<h3>🚦 Driver Status</h3>
 
-    <p id="locationText">
-      Location sharing is OFF
-    </p>
+<button
+class="available"
+onclick="setStatus('Available')"
+>
+🟢 Available
+</button>
 
-    <button
-      class="location-btn"
-      onclick="shareLocation()"
-    >
-      📍 Share My Location
-    </button>
+<button
+class="busy"
+onclick="setStatus('Busy')"
+>
+🔴 Busy
+</button>
 
-    <button
-      class="stop-btn"
-      onclick="stopLocation()"
-    >
-      🛑 Stop Sharing
-    </button>
+<button
+class="offline"
+onclick="setStatus('Offline')"
+>
+⚫ Offline
+</button>
 
-  </div>
+<p class="status">
+Current Status:
+<span id="status">Offline</span>
+</p>
 
-
-  <!-- BOOKINGS -->
-
-  <div class="card">
-
-    <h3>📋 My Bookings</h3>
-
-    <p id="bookings">
-      No bookings yet.
-    </p>
-
-  </div>
+</div>
 
 
-  <!-- LOGOUT -->
+<!-- LIVE LOCATION -->
 
-  <button
-    class="logout"
-    onclick="logout()"
-  >
-    🚪 Logout
-  </button>
+<div class="card">
+
+<h3>📍 Live Driver Location</h3>
+
+<p id="locationText">
+Location sharing is OFF
+</p>
+
+<button
+class="location"
+onclick="shareLocation()"
+>
+📍 Share My Location
+</button>
+
+<button
+class="stop"
+onclick="stopLocation()"
+>
+🛑 Stop Sharing
+</button>
+
+</div>
+
+
+<!-- BOOKINGS -->
+
+<div class="card">
+
+<h3>📋 My Bookings</h3>
+
+<div id="bookingList">
+
+<p class="empty">
+Checking for bookings...
+</p>
+
+</div>
+
+</div>
+
+
+<!-- LOGOUT -->
+
+<button
+class="logout"
+onclick="logout()"
+>
+🚪 Logout
+</button>
 
 </div>
 
 
 <script>
 
-function loginDriver() {
+function loginDriver(){
 
-  const name =
-    document.getElementById("driverName").value.trim();
+const name =
+document.getElementById("driverName").value.trim();
 
-  const phone =
-    document.getElementById("driverPhone").value.trim();
+const phone =
+document.getElementById("driverPhone").value.trim();
 
-  const vehicle =
-    document.getElementById("vehicle").value.trim();
-
-
-  if (
-    name === "" ||
-    phone === "" ||
-    vehicle === ""
-  ) {
-
-    alert(
-      "Please enter Driver Name, Phone Number and Vehicle Number."
-    );
-
-    return;
-  }
+const vehicle =
+document.getElementById("vehicle").value.trim();
 
 
-  localStorage.setItem(
-    "driverName",
-    name
-  );
+if(!name || !phone || !vehicle){
 
-  localStorage.setItem(
-    "driverPhone",
-    phone
-  );
+alert(
+"Please enter Driver Name, Phone Number and Vehicle Number."
+);
 
-  localStorage.setItem(
-    "vehicle",
-    vehicle
-  );
-
-  localStorage.setItem(
-    "driverStatus",
-    "Available"
-  );
-
-
-  showDashboard();
-
-  alert(
-    "Driver Login Successful! 🚗"
-  );
+return;
 }
 
 
+localStorage.setItem(
+"driverName",
+name
+);
 
-function showDashboard() {
+localStorage.setItem(
+"driverPhone",
+phone
+);
 
-  const name =
-    localStorage.getItem("driverName");
+localStorage.setItem(
+"vehicle",
+vehicle
+);
 
-  const phone =
-    localStorage.getItem("driverPhone");
-
-  const vehicle =
-    localStorage.getItem("vehicle");
-
-
-  if (
-    !name ||
-    !phone ||
-    !vehicle
-  ) {
-
-    document.getElementById(
-      "loginBox"
-    ).style.display = "block";
-
-    document.getElementById(
-      "dashboard"
-    ).style.display = "none";
-
-    return;
-  }
+localStorage.setItem(
+"driverStatus",
+"Available"
+);
 
 
-  document.getElementById(
-    "loginBox"
-  ).style.display = "none";
+showDashboard();
 
-  document.getElementById(
-    "dashboard"
-  ).style.display = "block";
-
-
-  document.getElementById(
-    "showName"
-  ).textContent = name;
-
-  document.getElementById(
-    "showPhone"
-  ).textContent = phone;
-
-  document.getElementById(
-    "showVehicle"
-  ).textContent = vehicle;
-
-
-  const savedStatus =
-    localStorage.getItem("driverStatus");
-
-
-  if (savedStatus) {
-
-    document.getElementById(
-      "status"
-    ).textContent = savedStatus;
-
-  }
+alert(
+"Driver Login Successful! 🚗"
+);
 
 }
 
 
+function showDashboard(){
 
-function setStatus(newStatus) {
+const name =
+localStorage.getItem("driverName");
 
-  document.getElementById(
-    "status"
-  ).textContent = newStatus;
+const phone =
+localStorage.getItem("driverPhone");
+
+const vehicle =
+localStorage.getItem("vehicle");
 
 
-  localStorage.setItem(
-    "driverStatus",
-    newStatus
-  );
+if(!name || !phone || !vehicle){
+
+document.getElementById(
+"loginBox"
+).style.display="block";
+
+document.getElementById(
+"dashboard"
+).style.display="none";
+
+return;
+}
+
+
+document.getElementById(
+"loginBox"
+).style.display="none";
+
+document.getElementById(
+"dashboard"
+).style.display="block";
+
+
+document.getElementById(
+"showName"
+).textContent=name;
+
+document.getElementById(
+"showPhone"
+).textContent=phone;
+
+document.getElementById(
+"showVehicle"
+).textContent=vehicle;
+
+
+const savedStatus =
+localStorage.getItem("driverStatus");
+
+
+if(savedStatus){
+
+document.getElementById(
+"status"
+).textContent=savedStatus;
 
 }
 
 
-
-function shareLocation() {
-
-  if (!navigator.geolocation) {
-
-    alert(
-      "Location is not supported on this device."
-    );
-
-    return;
-  }
-
-
-  navigator.geolocation.getCurrentPosition(
-
-    function(position) {
-
-      const latitude =
-        position.coords.latitude;
-
-      const longitude =
-        position.coords.longitude;
-
-
-      document.getElementById(
-        "locationText"
-      ).textContent =
-        "📍 Location: " +
-        latitude.toFixed(5) +
-        ", " +
-        longitude.toFixed(5);
-
-
-      localStorage.setItem(
-        "driverLatitude",
-        latitude
-      );
-
-      localStorage.setItem(
-        "driverLongitude",
-        longitude
-      );
-
-    },
-
-
-    function() {
-
-      document.getElementById(
-        "locationText"
-      ).textContent =
-        "Location permission denied.";
-
-    }
-
-  );
+loadBookings();
 
 }
 
 
+function setStatus(newStatus){
 
-function stopLocation() {
+document.getElementById(
+"status"
+).textContent=newStatus;
 
-  document.getElementById(
-    "locationText"
-  ).textContent =
-    "Location sharing is OFF";
-
-}
-
-
-
-function logout() {
-
-  localStorage.removeItem(
-    "driverName"
-  );
-
-  localStorage.removeItem(
-    "driverPhone"
-  );
-
-  localStorage.removeItem(
-    "vehicle"
-  );
-
-  localStorage.removeItem(
-    "driverStatus"
-  );
-
-  localStorage.removeItem(
-    "driverLatitude"
-  );
-
-  localStorage.removeItem(
-    "driverLongitude"
-  );
-
-
-  location.reload();
+localStorage.setItem(
+"driverStatus",
+newStatus
+);
 
 }
 
 
+function loadBookings(){
 
-window.onload = function() {
+const bookingList =
+document.getElementById("bookingList");
 
-  showDashboard();
+const savedBooking =
+localStorage.getItem("drivoraBooking");
+
+
+if(!savedBooking){
+
+bookingList.innerHTML =
+'<p class="empty">No bookings yet.</p>';
+
+return;
+}
+
+
+const booking =
+JSON.parse(savedBooking);
+
+
+bookingList.innerHTML =
+
+'<div class="booking">' +
+
+'<b>🚗 Booking #' +
+booking.id +
+'</b><br><br>' +
+
+'👤 Customer: ' +
+booking.customerName +
+'<br>' +
+
+'📞 Phone: ' +
+booking.customerPhone +
+'<br>' +
+
+'📍 Pickup: ' +
+booking.pickup +
+'<br>' +
+
+'🏁 Destination: ' +
+booking.destination +
+'<br>' +
+
+'🚦 Status: ' +
+'<b id="bookingStatus">' +
+booking.status +
+'</b>' +
+
+'<div class="booking-buttons">' +
+
+'<button class="accept" onclick="acceptBooking()">' +
+'✅ Accept Booking' +
+'</button>' +
+
+'<button class="reject" onclick="rejectBooking()">' +
+'❌ Reject Booking' +
+'</button>' +
+
+'</div>' +
+
+'</div>';
+
+}
+
+
+function acceptBooking(){
+
+const savedBooking =
+localStorage.getItem("drivoraBooking");
+
+
+if(!savedBooking){
+return;
+}
+
+
+const booking =
+JSON.parse(savedBooking);
+
+booking.status="Accepted";
+
+
+localStorage.setItem(
+"drivoraBooking",
+JSON.stringify(booking)
+);
+
+
+loadBookings();
+
+alert(
+"Booking Accepted! 🚗"
+);
+
+}
+
+
+function rejectBooking(){
+
+const savedBooking =
+localStorage.getItem("drivoraBooking");
+
+
+if(!savedBooking){
+return;
+}
+
+
+const booking =
+JSON.parse(savedBooking);
+
+booking.status="Rejected";
+
+
+localStorage.setItem(
+"drivoraBooking",
+JSON.stringify(booking)
+);
+
+
+loadBookings();
+
+alert(
+"Booking Rejected."
+);
+
+}
+
+
+function shareLocation(){
+
+if(!navigator.geolocation){
+
+alert(
+"Location is not supported on this device."
+);
+
+return;
+}
+
+
+navigator.geolocation.getCurrentPosition(
+
+function(position){
+
+const latitude =
+position.coords.latitude;
+
+const longitude =
+position.coords.longitude;
+
+
+document.getElementById(
+"locationText"
+).textContent =
+
+"📍 Location: " +
+latitude.toFixed(5) +
+", " +
+longitude.toFixed(5);
+
+
+localStorage.setItem(
+"driverLatitude",
+latitude
+);
+
+localStorage.setItem(
+"driverLongitude",
+longitude
+);
+
+},
+
+function(){
+
+document.getElementById(
+"locationText"
+).textContent =
+"Location permission denied.";
+
+}
+
+);
+
+}
+
+
+function stopLocation(){
+
+document.getElementById(
+"locationText"
+).textContent =
+"Location sharing is OFF";
+
+}
+
+
+function logout(){
+
+localStorage.removeItem(
+"driverName"
+);
+
+localStorage.removeItem(
+"driverPhone"
+);
+
+localStorage.removeItem(
+"vehicle"
+);
+
+localStorage.removeItem(
+"driverStatus"
+);
+
+localStorage.removeItem(
+"driverLatitude"
+);
+
+localStorage.removeItem(
+"driverLongitude"
+);
+
+
+location.reload();
+
+}
+
+
+window.onload=function(){
+
+showDashboard();
 
 };
 
