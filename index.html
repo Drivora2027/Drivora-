@@ -3,21 +3,324 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DRIVORA</title>
+<title>DRIVORA - Book a Driver</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 25px 15px;
+  font-family: Arial, sans-serif;
+  background: #f3f7ff;
+  color: #222;
+}
+
+.container {
+  max-width: 500px;
+  margin: auto;
+}
+
+h1 {
+  text-align: center;
+  color: #0066ff;
+}
+
+.subtitle {
+  text-align: center;
+}
+
+.card {
+  background: white;
+  padding: 22px;
+  margin-top: 20px;
+  border-radius: 14px;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.10);
+}
+
+input {
+  width: 100%;
+  padding: 13px;
+  margin: 7px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+button,
+a {
+  display: inline-block;
+  padding: 12px 18px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.book {
+  width: 100%;
+  background: #0066ff;
+  color: white;
+}
+
+.dashboard {
+  width: 100%;
+  background: #16a34a;
+  color: white;
+  text-align: center;
+}
+
+.booking {
+  background: #f8fafc;
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-top: 15px;
+  border-radius: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+.success {
+  color: #16a34a;
+  font-weight: bold;
+}
+</style>
 </head>
 
-<body style="font-family:Arial,sans-serif;text-align:center;margin-top:80px;background:#f3f7ff;">
+<body>
 
-<h1 style="color:#0066ff;">🚗 DRIVORA</h1>
+<div class="container">
 
-<h2>Welcome to DRIVORA</h2>
+<h1>🚗 DRIVORA</h1>
 
-<p>Your Driver Booking App</p>
+<p class="subtitle">
+Your Driver Booking App
+</p>
 
-<a href="driver-dashboard.html"
-style="display:inline-block;margin-top:20px;padding:12px 20px;background:#0066ff;color:white;text-decoration:none;border-radius:8px;">
-🚗 Open Driver Dashboard
+
+<!-- CUSTOMER BOOKING -->
+
+<div class="card">
+
+<h2>📋 Book a Driver</h2>
+
+<input
+id="customerName"
+type="text"
+placeholder="Customer Name"
+>
+
+<input
+id="customerPhone"
+type="tel"
+placeholder="Phone Number"
+>
+
+<input
+id="pickup"
+type="text"
+placeholder="Pickup Location"
+>
+
+<input
+id="destination"
+type="text"
+placeholder="Destination"
+>
+
+<button
+class="book"
+onclick="createBooking()"
+>
+🚗 Book Driver
+</button>
+
+<p id="bookingMessage"></p>
+
+</div>
+
+
+<!-- CURRENT BOOKING -->
+
+<div
+id="bookingCard"
+class="card hidden"
+>
+
+<h2>📦 Current Booking</h2>
+
+<div
+id="currentBooking"
+class="booking"
+></div>
+
+</div>
+
+
+<!-- DRIVER DASHBOARD -->
+
+<div class="card">
+
+<h2>🚗 Driver</h2>
+
+<a
+class="dashboard"
+href="driver-dashboard.html"
+>
+Open Driver Dashboard
 </a>
+
+</div>
+
+</div>
+
+
+<script>
+
+function createBooking() {
+
+const name =
+document.getElementById(
+"customerName"
+).value.trim();
+
+const phone =
+document.getElementById(
+"customerPhone"
+).value.trim();
+
+const pickup =
+document.getElementById(
+"pickup"
+).value.trim();
+
+const destination =
+document.getElementById(
+"destination"
+).value.trim();
+
+
+if (
+!name ||
+!phone ||
+!pickup ||
+!destination
+) {
+
+alert(
+"Please fill all booking details."
+);
+
+return;
+}
+
+
+const booking = {
+
+id: Date.now(),
+
+customerName: name,
+
+customerPhone: phone,
+
+pickup: pickup,
+
+destination: destination,
+
+status: "Pending",
+
+createdAt: new Date().toLocaleString()
+
+};
+
+
+localStorage.setItem(
+"drivoraBooking",
+JSON.stringify(booking)
+);
+
+
+document.getElementById(
+"bookingMessage"
+).innerHTML =
+'<span class="success">Booking created successfully! 🚗</span>';
+
+
+showBooking(booking);
+
+}
+
+
+function showBooking(booking) {
+
+if (!booking) {
+return;
+}
+
+
+document.getElementById(
+"bookingCard"
+).classList.remove("hidden");
+
+
+document.getElementById(
+"currentBooking"
+).innerHTML =
+
+"<b>Booking #" +
+booking.id +
+"</b><br><br>" +
+
+"👤 Customer: " +
+booking.customerName +
+"<br>" +
+
+"📞 Phone: " +
+booking.customerPhone +
+"<br>" +
+
+"📍 Pickup: " +
+booking.pickup +
+"<br>" +
+
+"🏁 Destination: " +
+booking.destination +
+"<br>" +
+
+"🚦 Status: " +
+booking.status +
+"<br>" +
+
+"🕒 Created: " +
+booking.createdAt;
+
+}
+
+
+window.onload = function() {
+
+const savedBooking =
+localStorage.getItem(
+"drivoraBooking"
+);
+
+if (savedBooking) {
+
+showBooking(
+JSON.parse(savedBooking)
+);
+
+}
+
+};
+
+</script>
 
 </body>
 </html>
