@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>DRIVORA - Driver Dashboard</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:#f3f7ff;
+    color:#172033;
+}
+
+/* HEADER */
+
+header{
+    background:linear-gradient(135deg,#005bea,#006eff);
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+.logo{
+    font-size:30px;
+    font-weight:bold;
+    letter-spacing:1px;
+}
+
+.subtitle{
+    margin-top:6px;
+    font-size:14px;
+}
+
+/* CONTAINER */
+
+.container{
+    max-width:700px;
+    margin:20px auto;
+    padding:15px;
+}
+
+/* CARD */
+
+.card{
+    background:white;
+    border-radius:15px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* DRIVER PROFILE */
+
+.driver-name{
+    font-size:24px;
+    font-weight:bold;
+    color:#0066ff;
+}
+
+.driver-info{
+    margin-top:8px;
+    color:#666;
+}
+
+.status{
+    display:inline-block;
+    margin-top:12px;
+    padding:8px 15px;
+    border-radius:20px;
+    background:#28a745;
+    color:white;
+    font-size:14px;
+}
+
+/* SECTION */
+
+.section-title{
+    font-size:22px;
+    color:#0066ff;
+    margin-bottom:15px;
+}
+
+/* BOOKING */
+
+.booking{
+    border:1px solid #e1e5ec;
+    border-radius:12px;
+    padding:15px;
+    margin-bottom:15px;
+    background:#fafcff;
+}
+
+.booking h3{
+    color:#0066ff;
+    margin-bottom:12px;
+}
+
+.booking p{
+    margin:8px 0;
+    color:#555;
+    line-height:1.4;
+}
+
+/* BOOKING STATUS */
+
+.booking-status{
+    display:inline-block;
+    margin-top:8px;
+    padding:7px 12px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.pending{
+    background:#fff1c7;
+    color:#8a6200;
+}
+
+.confirmed{
+    background:#d9f7e5;
+    color:#11733d;
+}
+
+.started{
+    background:#ffe7c2;
+    color:#9a5700;
+}
+
+.completed{
+    background:#dcecff;
+    color:#0755a6;
+}
+
+.cancelled{
+    background:#ffe0e0;
+    color:#a31616;
+}
+
+/* BUTTONS */
+
+button,
+select{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border-radius:8px;
+    border:1px solid #ddd;
+    font-size:15px;
+}
+
+button{
+    border:none;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:0.9;
+}
+
+.accept{
+    background:#28a745;
+}
+
+.reject{
+    background:#dc3545;
+}
+
+.start{
+    background:#ff9800;
+}
+
+.end{
+    background:#6f42c1;
+}
+
+.call{
+    background:#17a2b8;
+}
+
+.logout{
+    background:#dc3545;
+}
+
+.empty{
+    text-align:center;
+    color:#777;
+    padding:20px;
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+    .container{
+        margin:10px auto;
+        padding:10px;
+    }
+
+    .card{
+        padding:15px;
+    }
+
+    .logo{
+        font-size:26px;
+    }
+
+    .driver-name{
+        font-size:21px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        🚗 DRIVORA
+    </div>
+
+    <div class="subtitle">
+        Driver Dashboard
+    </div>
+
+</header>
+
+
+<div class="container">
+
+    <!-- DRIVER PROFILE -->
+
+    <div class="card">
+
+        <div class="driver-name" id="driverName">
+            Driver
+        </div>
+
+        <div class="driver-info" id="driverPhone">
+            Phone: -
+        </div>
+
+        <div class="driver-info" id="driverVehicle">
+            Vehicle: -
+        </div>
+
+        <div class="status" id="driverStatus">
+            Available
+        </div>
+
+    </div>
+
+
+    <!-- DRIVER STATUS -->
+
+    <div class="card">
+
+        <div class="section-title">
+            Driver Status
+        </div>
+
+        <select id="statusSelect"
+                onchange="updateDriverStatus()">
+
+            <option value="Available">
+                🟢 Available
+            </option>
+
+            <option value="Busy">
+                🔴 Busy
+            </option>
+
+            <option value="Offline">
+                ⚫ Offline
+            </option>
+
+        </select>
+
+    </div>
+
+<!-- LIVE LOCATION -->
+
+<div class="card">
+
+    <div class="section-title">
+        📍 Live Driver Location
+    </div>
+
+    <p id="locationStatus">
+        Location sharing is OFF
+    </p>
+
+    <button
+        class="start"
+        onclick="shareLocation()">
+
+        📍 Share My Location
+
+    </button>
+
+    <button
+        class="logout"
+        onclick="stopLocation()">
+
+        🛑 Stop Sharing
+
+    </button>
+
+</div>
+    <!-- BOOKINGS -->
+
+    <div class="card">
+
+        <div class="section-title">
+            📋 My Bookings
+        </div>
+
+        <div id="bookingList">
+
+            <div class="empty">
+                Loading bookings...
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- LOGOUT -->
+
+    <div class="card">
+
+        <button class="logout"
+                onclick="logoutDriver()">
+
+            🚪 Logout
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* ==============================
+   LOAD DATA
+============================== */
+
+let drivers = JSON.parse(
+    localStorage.getItem("drivoraDrivers") || "[]"
+);
+
+let bookings = JSON.parse(
+    localStorage.getItem("drivoraBookings") || "[]"
+);
+
+let currentDriver = JSON.parse(
+    localStorage.getItem("drivoraCurrentDriver") || "null"
+);
+
+
+/* ==============================
+   SAVE DATA
+============================== */
+
+function saveData(){
+
+    localStorage.setItem(
+        "drivoraDrivers",
+        JSON.stringify(drivers)
+    );
+
+    localStorage.setItem(
+        "drivoraBookings",
+        JSON.stringify(bookings)
+    );
+
+    localStorage.setItem(
+        "drivoraCurrentDriver",
+        JSON.stringify(currentDriver)
+    );
+
+}
+
+
+/* ==============================
+   FIND DRIVER
+============================== */
+
+function findDriver(){
+
+    if(!currentDriver){
+        return -1;
+    }
+
+    let phone =
+        String(currentDriver.phone || "")
+        .replace(/\D/g,"");
+
+    if(!phone){
+        return -1;
+    }
+
+    return drivers.findIndex(function(driver){
+
+        let driverPhone =
+            String(driver.phone || "")
+            .replace(/\D/g,"");
+
+        return driverPhone === phone;
+
+    });
+
+}
+
+
+/* ==============================
+   LOAD DRIVER
+============================== */
+
+function loadDriver(){
+
+    if(!currentDriver){
+
+        document.getElementById("driverName")
+            .textContent =
+            "Driver Login Required";
+
+        document.getElementById("driverPhone")
+            .textContent =
+            "Phone: -";
+
+        document.getElementById("driverVehicle")
+            .textContent =
+            "Vehicle: -";
+
+        document.getElementById("driverStatus")
+            .textContent =
+            "Offline";
+
+        document.getElementById("statusSelect")
+            .value =
+            "Offline";
+
+        document.getElementById("bookingList")
+            .innerHTML =
+            '<div class="empty">Please login first.</div>';
+
+        return;
+    }
+
+
+    let index = findDriver();
+
+
+    if(index !== -1){
+
+        currentDriver.name =
+            drivers[index].name || "Driver";
+
+        currentDriver.phone =
+            drivers[index].phone || "";
+
+        currentDriver.vehicle =
+            drivers[index].vehicle || "";
+
+        currentDriver.status =
+            drivers[index].status || "Available";
+
+        currentDriver.index =
+            index;
+
+    }
+
+
+    document.getElementById("driverName")
+        .textContent =
+        currentDriver.name || "Driver";
+
+
+    document.getElementById("driverPhone")
+        .textContent =
+        "Phone: " +
+        (currentDriver.phone || "-");
+
+
+    document.getElementById("driverVehicle")
+        .textContent =
+        "Vehicle: " +
+        (currentDriver.vehicle || "-");
+
+
+    document.getElementById("driverStatus")
+        .textContent =
+        currentDriver.status || "Available";
+
+
+    document.getElementById("statusSelect")
+        .value =
+        currentDriver.status || "Available";
+
+
+    showBookings();
+
+}
+
+
+/* ==============================
+   GET CUSTOMER PHONE
+============================== */
+
+function getCustomerPhone(booking){
+
+    return (
+        booking.phone ||
+        booking.customerPhone ||
+        booking.customerPhoneNumber ||
+        booking.phoneNumber ||
+        ""
+    );
+
+}
+
+
+/* ==============================
+   SHOW BOOKINGS
+============================== */
+
+function showBookings(){
+
+    const list =
+        document.getElementById("bookingList");
+
+    list.innerHTML = "";
+
+
+    if(!currentDriver){
+
+        list.innerHTML =
+            '<div class="empty">Please login first.</div>';
+
+        return;
+    }
+
+
+    const myBookings =
+        bookings.filter(function(booking){
+
+            return (
+
+                String(booking.driverIndex)
+                ===
+                String(currentDriver.index)
+
+                ||
+
+                booking.driver
+                ===
+                currentDriver.name
+
+            );
+
+        });
+
+
+    if(myBookings.length === 0){
+
+        list.innerHTML =
+            '<div class="empty">No bookings assigned.</div>';
+
+        return;
+    }
+
+
+    myBookings.forEach(function(booking){
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "booking";
+
+
+        let customerName =
+            booking.customer ||
+            booking.customerName ||
+            "-";
+
+
+        let customerPhone =
+            getCustomerPhone(booking);
+
+
+        let date =
+            booking.date ||
+            booking.bookingDate ||
+            "-";
+
+
+        let time =
+            booking.time ||
+            booking.bookingTime ||
+            "-";
+
+
+        let status =
+            booking.status ||
+            "Pending";
+
+
+        let statusClass =
+            "pending";
+
+        let statusText =
+            "🟡 Pending";
+
+
+        if(status === "Confirmed"){
+
+            statusClass =
+                "confirmed";
+
+            statusText =
+                "🟢 Confirmed";
+
+        }
+
+
+        if(status === "Trip Started"){
+
+            statusClass =
+                "started";
+
+            statusText =
+                "🟠 Trip Started";
+
+        }
+
+
+        if(status === "Completed"){
+
+            statusClass =
+                "completed";
+
+            statusText =
+                "🔵 Completed";
+
+        }
+
+
+        if(status === "Cancelled"){
+
+            statusClass =
+                "cancelled";
+
+            statusText =
+                "🔴 Cancelled";
+
+        }
+
+
+        div.innerHTML = `
+
+            <h3>
+                🆔 Booking ${booking.id || "-"}
+            </h3>
+
+            <p>
+                <strong>👤 Customer:</strong>
+                ${customerName}
+            </p>
+
+            <p>
+                <strong>📞 Phone:</strong>
+                ${customerPhone || "-"}
+            </p>
+
+            <p>
+                <strong>📍 Pickup:</strong>
+                ${booking.pickup || "-"}
+            </p>
+
+            <p>
+                <strong>🏁 Drop:</strong>
+                ${booking.drop || "-"}
+            </p>
+
+            <p>
+                <strong>📅 Date:</strong>
+                ${date}
+            </p>
+
+            <p>
+                <strong>⏰ Time:</strong>
+                ${time}
+            </p>
+
+            <p>
+                <strong>🚗 Driver:</strong>
+                ${booking.driver || currentDriver.name || "-"}
+            </p>
+
+            <span class="booking-status ${statusClass}">
+                ${statusText}
+            </span>
+
+            <button
+                class="call"
+                onclick="callCustomer('${booking.id}')">
+
+                📞 Call Customer
+
+            </button>
+
+            <button
+                class="accept"
+                onclick="acceptBooking('${booking.id}')">
+
+                ✅ Accept Booking
+
+            </button>
+
+            <button
+                class="reject"
+                onclick="rejectBooking('${booking.id}')">
+
+                ❌ Reject Booking
+
+            </button>
+
+            <button
+                class="start"
+                onclick="startTrip('${booking.id}')">
+
+                🚗 Start Trip
+
+            </button>
+
+            <button
+                class="end"
+                onclick="endTrip('${booking.id}')">
+
+                🏁 End Trip
+
+            </button>
+
+        `;
+
+
+        list.appendChild(div);
+
+    });
+
+}
+
+
+/* ==============================
+   UPDATE DRIVER STATUS
+============================== */
+
+function updateDriverStatus(){
+
+    if(!currentDriver){
+        return;
+    }
+
+    const status =
+        document.getElementById("statusSelect").value;
+
+    const index =
+        findDriver();
+
+
+    currentDriver.status =
+        status;
+
+
+    if(index !== -1){
+
+        drivers[index].status =
+            status;
+
+        currentDriver.index =
+            index;
+
+    }
+
+
+    document.getElementById("driverStatus")
+        .textContent =
+        status;
+
+
+    saveData();
+
+}
+
+
+/* ==============================
+   FIND BOOKING
+============================== */
+
+function findBooking(id){
+
+    return bookings.find(function(booking){
+
+        return String(booking.id)
+            ===
+            String(id);
+
+    });
+
+}
+
+
+/* ==============================
+   ACCEPT BOOKING
+============================== */
+
+function acceptBooking(id){
+
+    const booking =
+        findBooking(id);
+
+
+    if(!booking){
+
+        alert("Booking not found.");
+        return;
+
+    }
+
+
+    const index =
+        findDriver();
+
+
+    if(index === -1){
+
+        alert("Driver information not found.");
+        return;
+
+    }
+
+
+    booking.status =
+        "Confirmed";
+
+    booking.driverIndex =
+        index;
+
+    booking.driver =
+        drivers[index].name;
+
+
+    drivers[index].status =
+        "Busy";
+
+    currentDriver.status =
+        "Busy";
+
+    currentDriver.index =
+        index;
+
+
+    saveData();
+
+    loadDriver();
+
+
+    alert(
+        "✅ Booking accepted successfully!"
+    );
+
+}
+
+
+/* ==============================
+   REJECT BOOKING
+============================== */
+
+function rejectBooking(id){
+
+    const booking =
+        findBooking(id);
+
+
+    if(!booking){
+
+        alert("Booking not found.");
+        return;
+
+    }
+
+
+    if(!confirm(
+        "Are you sure you want to reject this booking?"
+    )){
+
+        return;
+
+    }
+
+
+    booking.status =
+        "Cancelled";
+
+    booking.driver =
+        "Not Assigned";
+
+    booking.driverIndex =
+        -1;
+
+
+    const index =
+        findDriver();
+
+
+    if(index !== -1){
+
+        drivers[index].status =
+            "Available";
+
+        currentDriver.status =
+            "Available";
+
+    }
+
+
+    saveData();
+
+    loadDriver();
+
+
+    alert(
+        "❌ Booking rejected."
+    );
+
+}
+
+
+/* ==============================
+   START TRIP
+============================== */
+
+function startTrip(id){
+
+    const booking =
+        findBooking(id);
+
+
+    if(!booking){
+
+        alert("Booking not found.");
+        return;
+
+    }
+
+
+    if(booking.status !== "Confirmed"){
+
+        alert(
+            "Please accept the booking first."
+        );
+
+        return;
+
+    }
+
+
+    booking.status =
+        "Trip Started";
+
+
+    saveData();
+
+    showBookings();
+
+
+    alert(
+        "🚗 Trip started successfully!"
+    );
+
+}
+
+
+/* ==============================
+   END TRIP
+============================== */
+
+function endTrip(id){
+
+    const booking =
+        findBooking(id);
+
+
+    if(!booking){
+
+        alert("Booking not found.");
+        return;
+
+    }
+
+
+    if(booking.status !== "Trip Started"){
+
+        alert(
+            "Please start the trip first."
+        );
+
+        return;
+
+    }
+
+
+    booking.status =
+        "Completed";
+
+
+    const index =
+        findDriver();
+
+
+    if(index !== -1){
+
+        drivers[index].status =
+            "Available";
+
+        currentDriver.status =
+            "Available";
+
+    }
+
+
+    saveData();
+
+    loadDriver();
+
+
+    alert(
+        "🏁 Trip completed successfully!"
+    );
+
+}
+
+
+/* ==============================
+   CALL CUSTOMER
+============================== */
+
+function callCustomer(id){
+
+    const booking =
+        findBooking(id);
+
+
+    if(!booking){
+
+        alert("Booking not found.");
+        return;
+
+    }
+
+
+    let phone =
+        getCustomerPhone(booking);
+
+
+    if(!phone){
+
+        alert(
+            "Customer phone number not available."
+        );
+
+        return;
+
+    }
+
+
+    phone =
+        String(phone)
+        .trim()
+        .replace(/[^\d+]/g,"");
+
+
+    if(phone.startsWith("0")){
+
+        phone =
+            phone.substring(1);
+
+    }
+
+
+    if(/^\d{10}$/.test(phone)){
+
+        phone =
+            "+91" + phone;
+
+    }
+
+
+    if(phone.length < 10){
+
+        alert(
+            "Invalid customer phone number."
+        );
+
+        return;
+
+    }
+
+
+    window.location.href =
+        "tel:" + phone;
+
+}
+
+
+/* ==============================
+   LOGOUT
+============================== */
+
+function logoutDriver(){
+
+    localStorage.removeItem(
+        "drivoraCurrentDriver"
+    );
+
+    localStorage.removeItem(
+        "drivoraLoggedDriver"
+    );
+
+
+    window.location.href =
+        "driver.html";
+
+}
+
+
+/* ==============================
+   AUTO REFRESH
+============================== */
+
+setInterval(function(){
+
+    drivers =
+        JSON.parse(
+            localStorage.getItem(
+                "drivoraDrivers"
+            ) || "[]"
+        );
+
+
+    bookings =
+        JSON.parse(
+            localStorage.getItem(
+                "drivoraBookings"
+            ) || "[]"
+        );
+
+
+    currentDriver =
+        JSON.parse(
+            localStorage.getItem(
+                "drivoraCurrentDriver"
+            ) || "null"
+        );
+
+
+    loadDriver();
+
+},5000);
+
+
+/* ==============================
+   START
+============================== */
+
+loadDriver();
+/* ==============================
+   LIVE DRIVER LOCATION
+============================== */
+
+let locationWatchId = null;
+
+function shareLocation(){
+
+    if(!navigator.geolocation){
+
+        alert(
+            "❌ GPS is not supported on this device."
+        );
+
+        return;
+    }
+
+    document.getElementById("locationStatus")
+        .textContent =
+        "📍 Getting your location...";
+
+
+    locationWatchId =
+        navigator.geolocation.watchPosition(
+
+            function(position){
+
+                const latitude =
+                    position.coords.latitude;
+
+                const longitude =
+                    position.coords.longitude;
+
+
+                const driverLocation = {
+
+                    latitude: latitude,
+
+                    longitude: longitude,
+
+                    driverName:
+                        currentDriver
+                        ? currentDriver.name
+                        : "Driver",
+
+                    phone:
+                        currentDriver
+                        ? currentDriver.phone
+                        : "",
+
+                    updatedAt:
+                        new Date().toISOString()
+
+                };
+
+
+                localStorage.setItem(
+                    "drivoraDriverLocation",
+                    JSON.stringify(driverLocation)
+                );
+
+
+                document.getElementById("locationStatus")
+                    .textContent =
+                    "🟢 Location sharing ON";
+
+            },
+
+            function(error){
+
+                document.getElementById("locationStatus")
+                    .textContent =
+                    "❌ Unable to get location.";
+
+                alert(
+                    "Please allow location permission."
+                );
+
+            },
+
+            {
+                enableHighAccuracy:true,
+                maximumAge:5000,
+                timeout:10000
+            }
+
+        );
+
+}
+
+
+function stopLocation(){
+
+    if(locationWatchId !== null){
+
+        navigator.geolocation.clearWatch(
+            locationWatchId
+        );
+
+        locationWatchId = null;
+
+    }
+
+
+    localStorage.removeItem(
+        "drivoraDriverLocation"
+    );
+
+
+    document.getElementById("locationStatus")
+        .textContent =
+        "Location sharing is OFF";
+
+}
+</script>
+
+</body>
+</html>
