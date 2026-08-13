@@ -1,326 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DRIVORA - Book a Driver</title>
-
-<style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  padding: 25px 15px;
-  font-family: Arial, sans-serif;
-  background: #f3f7ff;
-  color: #222;
-}
-
-.container {
-  max-width: 500px;
-  margin: auto;
-}
-
-h1 {
-  text-align: center;
-  color: #0066ff;
-}
-
-.subtitle {
-  text-align: center;
-}
-
-.card {
-  background: white;
-  padding: 22px;
-  margin-top: 20px;
-  border-radius: 14px;
-  box-shadow: 0 3px 15px rgba(0,0,0,0.10);
-}
-
-input {
-  width: 100%;
-  padding: 13px;
-  margin: 7px 0;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 16px;
-}
-
-button,
-a {
-  display: inline-block;
-  padding: 12px 18px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.book {
-  width: 100%;
-  background: #0066ff;
-  color: white;
-}
-
-.dashboard {
-  width: 100%;
-  background: #16a34a;
-  color: white;
-  text-align: center;
-}
-
-.booking {
-  background: #f8fafc;
-  border: 1px solid #ddd;
-  padding: 15px;
-  margin-top: 15px;
-  border-radius: 10px;
-}
-
-.hidden {
-  display: none;
-}
-
-.success {
-  color: #16a34a;
-  font-weight: bold;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DRIVORA</title>
 </head>
 
-<body>
+<body style="font-family:Arial,sans-serif;text-align:center;margin-top:50px;background:#f3f7ff;">
 
-<div class="container">
+  <h1 style="color:#0066ff;">🚗 DRIVORA</h1>
+  <h2>Welcome to DRIVORA</h2>
+  <p>Your Driver Booking App</p>
 
-<h1>🚗 DRIVORA</h1>
+  <h3>📋 Book a Driver</h3>
 
-<p class="subtitle">
-Your Driver Booking App
-</p>
+  <input id="name" type="text" placeholder="Customer Name"
+    style="display:block;margin:10px auto;padding:12px;width:80%;max-width:350px;">
 
+  <input id="phone" type="tel" placeholder="Phone Number"
+    style="display:block;margin:10px auto;padding:12px;width:80%;max-width:350px;">
 
-<!-- CUSTOMER BOOKING -->
+  <input id="pickup" type="text" placeholder="Pickup Location"
+    style="display:block;margin:10px auto;padding:12px;width:80%;max-width:350px;">
 
-<div class="card">
+  <input id="destination" type="text" placeholder="Destination"
+    style="display:block;margin:10px auto;padding:12px;width:80%;max-width:350px;">
 
-<h2>📋 Book a Driver</h2>
+  <button id="bookBtn"
+    style="margin-top:15px;padding:12px 20px;background:#0066ff;color:white;border:0;border-radius:8px;">
+    🚗 Book Driver
+  </button>
 
-<input
-id="customerName"
-type="text"
-placeholder="Customer Name"
->
+  <p id="message" style="font-weight:bold;"></p>
 
-<input
-id="customerPhone"
-type="tel"
-placeholder="Phone Number"
->
+  <a href="driver-dashboard.html"
+    style="display:inline-block;margin-top:20px;padding:12px 20px;background:#222;color:white;text-decoration:none;border-radius:8px;">
+    🚗 Driver Dashboard
+  </a>
 
-<input
-id="pickup"
-type="text"
-placeholder="Pickup Location"
->
+  <script type="module">
 
-<input
-id="destination"
-type="text"
-placeholder="Destination"
->
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
 
-<button
-class="book"
-onclick="createBooking()"
->
-🚗 Book Driver
-</button>
+    import {
+      getDatabase,
+      ref,
+      push,
+      set
+    } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-database.js";
 
-<p id="bookingMessage"></p>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDmW5pUrfGFoAhlhc0-BGqmw3S-se_Lsxw",
+      authDomain: "drivora-35eed.firebaseapp.com",
+      databaseURL: "https://drivora-35eed-default-rtdb.firebaseio.com",
+      projectId: "drivora-35eed",
+      storageBucket: "drivora-35eed.firebasestorage.app",
+      messagingSenderId: "691701212381",
+      appId: "1:691701212381:web:44fc679b1309cc7f31a734"
+    };
 
-</div>
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
 
+    document.getElementById("bookBtn").addEventListener("click", async () => {
 
-<!-- CURRENT BOOKING -->
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const pickup = document.getElementById("pickup").value.trim();
+      const destination = document.getElementById("destination").value.trim();
+      const message = document.getElementById("message");
 
-<div
-id="bookingCard"
-class="card hidden"
->
+      if (!name || !phone || !pickup || !destination) {
+        message.textContent = "⚠️ Please fill all details.";
+        message.style.color = "red";
+        return;
+      }
 
-<h2>📦 Current Booking</h2>
+      try {
 
-<div
-id="currentBooking"
-class="booking"
-></div>
+        const bookingRef = push(ref(database, "bookings"));
 
-</div>
+        await set(bookingRef, {
+          customerName: name,
+          phone: phone,
+          pickupLocation: pickup,
+          destination: destination,
+          status: "Pending",
+          createdAt: new Date().toISOString()
+        });
 
+        message.textContent = "✅ Booking created successfully!";
+        message.style.color = "green";
 
-<!-- DRIVER DASHBOARD -->
+        document.getElementById("name").value = "";
+        document.getElementById("phone").value = "";
+        document.getElementById("pickup").value = "";
+        document.getElementById("destination").value = "";
 
-<div class="card">
+      } catch (error) {
 
-<h2>🚗 Driver</h2>
+        console.error(error);
+        message.textContent = "❌ Booking failed. Please try again.";
+        message.style.color = "red";
 
-<a
-class="dashboard"
-href="driver-dashboard.html"
->
-Open Driver Dashboard
-</a>
+      }
 
-</div>
+    });
 
-</div>
-
-
-<script>
-
-function createBooking() {
-
-const name =
-document.getElementById(
-"customerName"
-).value.trim();
-
-const phone =
-document.getElementById(
-"customerPhone"
-).value.trim();
-
-const pickup =
-document.getElementById(
-"pickup"
-).value.trim();
-
-const destination =
-document.getElementById(
-"destination"
-).value.trim();
-
-
-if (
-!name ||
-!phone ||
-!pickup ||
-!destination
-) {
-
-alert(
-"Please fill all booking details."
-);
-
-return;
-}
-
-
-const booking = {
-
-id: Date.now(),
-
-customerName: name,
-
-customerPhone: phone,
-
-pickup: pickup,
-
-destination: destination,
-
-status: "Pending",
-
-createdAt: new Date().toLocaleString()
-
-};
-
-
-localStorage.setItem(
-"drivoraBooking",
-JSON.stringify(booking)
-);
-
-
-document.getElementById(
-"bookingMessage"
-).innerHTML =
-'<span class="success">Booking created successfully! 🚗</span>';
-
-
-showBooking(booking);
-
-}
-
-
-function showBooking(booking) {
-
-if (!booking) {
-return;
-}
-
-
-document.getElementById(
-"bookingCard"
-).classList.remove("hidden");
-
-
-document.getElementById(
-"currentBooking"
-).innerHTML =
-
-"<b>Booking #" +
-booking.id +
-"</b><br><br>" +
-
-"👤 Customer: " +
-booking.customerName +
-"<br>" +
-
-"📞 Phone: " +
-booking.customerPhone +
-"<br>" +
-
-"📍 Pickup: " +
-booking.pickup +
-"<br>" +
-
-"🏁 Destination: " +
-booking.destination +
-"<br>" +
-
-"🚦 Status: " +
-booking.status +
-"<br>" +
-
-"🕒 Created: " +
-booking.createdAt;
-
-}
-
-
-window.onload = function() {
-
-const savedBooking =
-localStorage.getItem(
-"drivoraBooking"
-);
-
-if (savedBooking) {
-
-showBooking(
-JSON.parse(savedBooking)
-);
-
-}
-
-};
-
-</script>
+  </script>
 
 </body>
 </html>
