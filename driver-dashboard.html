@@ -81,6 +81,7 @@ button{
 
 .booking-buttons{
   text-align:center;
+  margin-top:12px
 }
 
 .empty{
@@ -94,94 +95,55 @@ button{
 <h1>🚗 DRIVORA</h1>
 <h2>Driver Dashboard</h2>
 
-
-<!-- DRIVER LOGIN -->
-
 <div id="loginBox" class="card">
 
 <h3>🔐 Driver Login</h3>
 
-<input
-id="driverName"
-type="text"
-placeholder="Driver Name"
->
+<input id="driverName" type="text" placeholder="Driver Name">
 
-<input
-id="driverPhone"
-type="tel"
-placeholder="Phone Number"
->
+<input id="driverPhone" type="tel" placeholder="Phone Number">
 
-<input
-id="vehicle"
-type="text"
-placeholder="Vehicle Number"
->
+<input id="vehicle" type="text" placeholder="Vehicle Number">
 
-<button
-class="login"
-onclick="loginDriver()"
->
+<button class="login" id="loginBtn">
 🚗 Login
 </button>
 
 </div>
 
-
-<!-- DRIVER DASHBOARD -->
-
 <div id="dashboard">
-
-
-<!-- DRIVER INFORMATION -->
 
 <div class="card">
 
 <h3>👤 Driver Information</h3>
 
 <p class="info">
-Driver:
-<b id="showName">-</b>
+Driver: <b id="showName">-</b>
 </p>
 
 <p class="info">
-Phone:
-<b id="showPhone">-</b>
+Phone: <b id="showPhone">-</b>
 </p>
 
 <p class="info">
-Vehicle:
-<b id="showVehicle">-</b>
+Vehicle: <b id="showVehicle">-</b>
 </p>
 
 </div>
-
-
-<!-- DRIVER STATUS -->
 
 <div class="card">
 
 <h3>🚦 Driver Status</h3>
 
-<button
-class="available"
-onclick="setStatus('Available')"
->
+<button class="available" id="availableBtn">
 🟢 Available
 </button>
 
-<button
-class="busy"
-onclick="setStatus('Busy')"
->
+<button class="busy" id="busyBtn">
 🔴 Busy
 </button>
 
-<button
-class="offline"
-onclick="setStatus('Offline')"
->
+<button class="offline" id="offlineBtn">
 ⚫ Offline
 </button>
 
@@ -192,9 +154,6 @@ Current Status:
 
 </div>
 
-
-<!-- LIVE LOCATION -->
-
 <div class="card">
 
 <h3>📍 Live Driver Location</h3>
@@ -203,24 +162,15 @@ Current Status:
 Location sharing is OFF
 </p>
 
-<button
-class="location"
-onclick="shareLocation()"
->
+<button class="location" id="locationBtn">
 📍 Share My Location
 </button>
 
-<button
-class="stop"
-onclick="stopLocation()"
->
+<button class="stop" id="stopLocationBtn">
 🛑 Stop Sharing
 </button>
 
 </div>
-
-
-<!-- BOOKINGS -->
 
 <div class="card">
 
@@ -236,393 +186,477 @@ Checking for bookings...
 
 </div>
 
-
-<!-- LOGOUT -->
-
-<button
-class="logout"
-onclick="logout()"
->
+<button class="logout" id="logoutBtn">
 🚪 Logout
 </button>
 
 </div>
 
+<script type="module">
 
-<script>
+import { initializeApp } from
+"https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+
+import {
+  getDatabase,
+  ref,
+  onValue,
+  update
+} from
+"https://www.gstatic.com/firebasejs/12.17.1/firebase-database.js";
+
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyDmW5pUrfGFoAhlhc0-BGqmw3S-se_Lsxw",
+
+  authDomain: "drivora-35eed.firebaseapp.com",
+
+  databaseURL:
+  "https://drivora-35eed-default-rtdb.firebaseio.com",
+
+  projectId: "drivora-35eed",
+
+  storageBucket:
+  "drivora-35eed.firebasestorage.app",
+
+  messagingSenderId: "691701212381",
+
+  appId:
+  "1:691701212381:web:44fc679b1309cc7f31a734"
+
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const database = getDatabase(app);
+
 
 function loginDriver(){
 
-const name =
-document.getElementById("driverName").value.trim();
+  const name =
+  document.getElementById("driverName").value.trim();
 
-const phone =
-document.getElementById("driverPhone").value.trim();
+  const phone =
+  document.getElementById("driverPhone").value.trim();
 
-const vehicle =
-document.getElementById("vehicle").value.trim();
-
-
-if(!name || !phone || !vehicle){
-
-alert(
-"Please enter Driver Name, Phone Number and Vehicle Number."
-);
-
-return;
-}
+  const vehicle =
+  document.getElementById("vehicle").value.trim();
 
 
-localStorage.setItem(
-"driverName",
-name
-);
+  if(!name || !phone || !vehicle){
 
-localStorage.setItem(
-"driverPhone",
-phone
-);
+    alert(
+      "Please enter Driver Name, Phone Number and Vehicle Number."
+    );
 
-localStorage.setItem(
-"vehicle",
-vehicle
-);
-
-localStorage.setItem(
-"driverStatus",
-"Available"
-);
+    return;
+  }
 
 
-showDashboard();
+  localStorage.setItem("driverName", name);
 
-alert(
-"Driver Login Successful! 🚗"
-);
+  localStorage.setItem("driverPhone", phone);
+
+  localStorage.setItem("vehicle", vehicle);
+
+  localStorage.setItem("driverStatus", "Available");
+
+
+  showDashboard();
+
+  alert("Driver Login Successful! 🚗");
 
 }
 
 
 function showDashboard(){
 
-const name =
-localStorage.getItem("driverName");
+  const name =
+  localStorage.getItem("driverName");
 
-const phone =
-localStorage.getItem("driverPhone");
+  const phone =
+  localStorage.getItem("driverPhone");
 
-const vehicle =
-localStorage.getItem("vehicle");
-
-
-if(!name || !phone || !vehicle){
-
-document.getElementById(
-"loginBox"
-).style.display="block";
-
-document.getElementById(
-"dashboard"
-).style.display="none";
-
-return;
-}
+  const vehicle =
+  localStorage.getItem("vehicle");
 
 
-document.getElementById(
-"loginBox"
-).style.display="none";
+  if(!name || !phone || !vehicle){
 
-document.getElementById(
-"dashboard"
-).style.display="block";
+    document.getElementById("loginBox").style.display =
+    "block";
 
+    document.getElementById("dashboard").style.display =
+    "none";
 
-document.getElementById(
-"showName"
-).textContent=name;
-
-document.getElementById(
-"showPhone"
-).textContent=phone;
-
-document.getElementById(
-"showVehicle"
-).textContent=vehicle;
+    return;
+  }
 
 
-const savedStatus =
-localStorage.getItem("driverStatus");
+  document.getElementById("loginBox").style.display =
+  "none";
+
+  document.getElementById("dashboard").style.display =
+  "block";
 
 
-if(savedStatus){
+  document.getElementById("showName").textContent =
+  name;
 
-document.getElementById(
-"status"
-).textContent=savedStatus;
+  document.getElementById("showPhone").textContent =
+  phone;
 
-}
+  document.getElementById("showVehicle").textContent =
+  vehicle;
 
 
-loadBookings();
+  const savedStatus =
+  localStorage.getItem("driverStatus");
+
+
+  if(savedStatus){
+
+    document.getElementById("status").textContent =
+    savedStatus;
+
+  }
+
+
+  loadBookings();
 
 }
 
 
 function setStatus(newStatus){
 
-document.getElementById(
-"status"
-).textContent=newStatus;
+  document.getElementById("status").textContent =
+  newStatus;
 
-localStorage.setItem(
-"driverStatus",
-newStatus
-);
+  localStorage.setItem(
+    "driverStatus",
+    newStatus
+  );
 
 }
 
 
 function loadBookings(){
 
-const bookingList =
-document.getElementById("bookingList");
-
-const savedBooking =
-localStorage.getItem("drivoraBooking");
+  const bookingList =
+  document.getElementById("bookingList");
 
 
-if(!savedBooking){
+  const bookingsRef =
+  ref(database, "bookings");
 
-bookingList.innerHTML =
-'<p class="empty">No bookings yet.</p>';
 
-return;
+  onValue(bookingsRef, (snapshot) => {
+
+    bookingList.innerHTML = "";
+
+
+    if(!snapshot.exists()){
+
+      bookingList.innerHTML =
+      '<p class="empty">No bookings yet.</p>';
+
+      return;
+
+    }
+
+
+    const bookings =
+    snapshot.val();
+
+
+    Object.entries(bookings).forEach(
+      ([bookingId, booking]) => {
+
+        const bookingDiv =
+        document.createElement("div");
+
+        bookingDiv.className =
+        "booking";
+
+
+        bookingDiv.innerHTML = `
+
+          <b>🚗 Booking #${bookingId}</b>
+          <br><br>
+
+          👤 Customer:
+          ${booking.customerName || "-"}
+          <br>
+
+          📞 Phone:
+          ${booking.phone || "-"}
+          <br>
+
+          📍 Pickup:
+          ${booking.pickupLocation || "-"}
+          <br>
+
+          🏁 Destination:
+          ${booking.destination || "-"}
+          <br>
+
+          🚦 Status:
+          <b>${booking.status || "Pending"}</b>
+
+          <div class="booking-buttons">
+
+            <button
+              class="accept"
+              data-id="${bookingId}"
+              data-action="accept"
+            >
+              ✅ Accept Booking
+            </button>
+
+            <button
+              class="reject"
+              data-id="${bookingId}"
+              data-action="reject"
+            >
+              ❌ Reject Booking
+            </button>
+
+          </div>
+
+        `;
+
+
+        bookingList.appendChild(bookingDiv);
+
+      }
+    );
+
+
+    document
+    .querySelectorAll(".booking button")
+    .forEach(button => {
+
+      button.addEventListener("click", () => {
+
+        const id =
+        button.dataset.id;
+
+        const action =
+        button.dataset.action;
+
+
+        updateBookingStatus(
+          id,
+          action
+        );
+
+      });
+
+    });
+
+  });
+
 }
 
 
-const booking =
-JSON.parse(savedBooking);
+async function updateBookingStatus(
+  bookingId,
+  action
+){
+
+  const newStatus =
+  action === "accept"
+  ? "Accepted"
+  : "Rejected";
 
 
-bookingList.innerHTML =
+  try{
 
-'<div class="booking">' +
-
-'<b>🚗 Booking #' +
-booking.id +
-'</b><br><br>' +
-
-'👤 Customer: ' +
-booking.customerName +
-'<br>' +
-
-'📞 Phone: ' +
-booking.customerPhone +
-'<br>' +
-
-'📍 Pickup: ' +
-booking.pickup +
-'<br>' +
-
-'🏁 Destination: ' +
-booking.destination +
-'<br>' +
-
-'🚦 Status: ' +
-'<b id="bookingStatus">' +
-booking.status +
-'</b>' +
-
-'<div class="booking-buttons">' +
-
-'<button class="accept" onclick="acceptBooking()">' +
-'✅ Accept Booking' +
-'</button>' +
-
-'<button class="reject" onclick="rejectBooking()">' +
-'❌ Reject Booking' +
-'</button>' +
-
-'</div>' +
-
-'</div>';
-
-}
+    const bookingRef =
+    ref(
+      database,
+      "bookings/" + bookingId
+    );
 
 
-function acceptBooking(){
-
-const savedBooking =
-localStorage.getItem("drivoraBooking");
-
-
-if(!savedBooking){
-return;
-}
+    await update(
+      bookingRef,
+      {
+        status: newStatus
+      }
+    );
 
 
-const booking =
-JSON.parse(savedBooking);
-
-booking.status="Accepted";
-
-
-localStorage.setItem(
-"drivoraBooking",
-JSON.stringify(booking)
-);
+    alert(
+      newStatus === "Accepted"
+      ? "Booking Accepted! 🚗"
+      : "Booking Rejected."
+    );
 
 
-loadBookings();
+  }catch(error){
 
-alert(
-"Booking Accepted! 🚗"
-);
+    console.error(error);
 
-}
+    alert(
+      "Unable to update booking."
+    );
 
-
-function rejectBooking(){
-
-const savedBooking =
-localStorage.getItem("drivoraBooking");
-
-
-if(!savedBooking){
-return;
-}
-
-
-const booking =
-JSON.parse(savedBooking);
-
-booking.status="Rejected";
-
-
-localStorage.setItem(
-"drivoraBooking",
-JSON.stringify(booking)
-);
-
-
-loadBookings();
-
-alert(
-"Booking Rejected."
-);
+  }
 
 }
 
 
 function shareLocation(){
 
-if(!navigator.geolocation){
+  if(!navigator.geolocation){
 
-alert(
-"Location is not supported on this device."
-);
+    alert(
+      "Location is not supported on this device."
+    );
 
-return;
-}
+    return;
 
-
-navigator.geolocation.getCurrentPosition(
-
-function(position){
-
-const latitude =
-position.coords.latitude;
-
-const longitude =
-position.coords.longitude;
+  }
 
 
-document.getElementById(
-"locationText"
-).textContent =
+  navigator.geolocation.getCurrentPosition(
 
-"📍 Location: " +
-latitude.toFixed(5) +
-", " +
-longitude.toFixed(5);
+    function(position){
+
+      const latitude =
+      position.coords.latitude;
+
+      const longitude =
+      position.coords.longitude;
 
 
-localStorage.setItem(
-"driverLatitude",
-latitude
-);
+      document.getElementById(
+        "locationText"
+      ).textContent =
+      "📍 Location: " +
+      latitude.toFixed(5) +
+      ", " +
+      longitude.toFixed(5);
 
-localStorage.setItem(
-"driverLongitude",
-longitude
-);
 
-},
+      localStorage.setItem(
+        "driverLatitude",
+        latitude
+      );
 
-function(){
+      localStorage.setItem(
+        "driverLongitude",
+        longitude
+      );
 
-document.getElementById(
-"locationText"
-).textContent =
-"Location permission denied.";
+    },
 
-}
+    function(){
 
-);
+      document.getElementById(
+        "locationText"
+      ).textContent =
+      "Location permission denied.";
+
+    }
+
+  );
 
 }
 
 
 function stopLocation(){
 
-document.getElementById(
-"locationText"
-).textContent =
-"Location sharing is OFF";
+  document.getElementById(
+    "locationText"
+  ).textContent =
+  "Location sharing is OFF";
 
 }
 
 
 function logout(){
 
-localStorage.removeItem(
-"driverName"
-);
+  localStorage.removeItem("driverName");
 
-localStorage.removeItem(
-"driverPhone"
-);
+  localStorage.removeItem("driverPhone");
 
-localStorage.removeItem(
-"vehicle"
-);
+  localStorage.removeItem("vehicle");
 
-localStorage.removeItem(
-"driverStatus"
-);
+  localStorage.removeItem("driverStatus");
 
-localStorage.removeItem(
-"driverLatitude"
-);
+  localStorage.removeItem("driverLatitude");
 
-localStorage.removeItem(
-"driverLongitude"
-);
+  localStorage.removeItem("driverLongitude");
 
 
-location.reload();
+  location.reload();
 
 }
 
 
-window.onload=function(){
+document
+.getElementById("loginBtn")
+.addEventListener(
+  "click",
+  loginDriver
+);
+
+
+document
+.getElementById("availableBtn")
+.addEventListener(
+  "click",
+  () => setStatus("Available")
+);
+
+
+document
+.getElementById("busyBtn")
+.addEventListener(
+  "click",
+  () => setStatus("Busy")
+);
+
+
+document
+.getElementById("offlineBtn")
+.addEventListener(
+  "click",
+  () => setStatus("Offline")
+);
+
+
+document
+.getElementById("locationBtn")
+.addEventListener(
+  "click",
+  shareLocation
+);
+
+
+document
+.getElementById("stopLocationBtn")
+.addEventListener(
+  "click",
+  stopLocation
+);
+
+
+document
+.getElementById("logoutBtn")
+.addEventListener(
+  "click",
+  logout
+);
+
 
 showDashboard();
 
-};
-
-<script type="module">
+</script>
 
 </body>
 </html>
