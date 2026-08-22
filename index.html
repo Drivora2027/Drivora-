@@ -1,0 +1,3698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>DRIVORA DRIVER</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+:root{
+  --green:#16B86A;
+  --green-dark:#0C9655;
+  --text:#0B1720;
+  --muted:#6B7280;
+  --light:#F5F8F7;
+  --border:#E5E7EB;
+  --red:#E5484D;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#E9EEF1;
+  color:var(--text);
+}
+
+button,input,select{
+  font:inherit;
+}
+
+.app{
+  width:100%;
+  max-width:500px;
+  min-height:100vh;
+  margin:auto;
+  background:#fff;
+  overflow:hidden;
+}
+
+.screen{
+  display:none;
+  min-height:100vh;
+}
+
+.screen.active{
+  display:flex;
+}
+
+/* ================================
+   LOGO
+================================ */
+
+.logo{
+  width:88px;
+  height:88px;
+  border-radius:26px;
+  position:relative;
+  background:linear-gradient(145deg,#19C875 0%,#0EA85D 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:auto;
+  font-size:0;
+  overflow:hidden;
+  box-shadow:
+    0 18px 45px rgba(22,184,106,.22),
+    inset 0 1px 0 rgba(255,255,255,.25);
+}
+
+.logo::before{
+  content:"";
+  width:39px;
+  height:50px;
+  border:8px solid #fff;
+  border-left:0;
+  border-radius:0 30px 30px 0;
+  transform:skewX(-8deg);
+  position:absolute;
+}
+
+.logo::after{
+  content:"";
+  position:absolute;
+  width:24px;
+  height:7px;
+  background:#fff;
+  border-radius:10px;
+  left:22px;
+  top:40px;
+  transform:rotate(-8deg);
+  box-shadow:0 11px 0 rgba(255,255,255,.9);
+}
+
+.brand{
+  text-align:center;
+  margin-top:18px;
+  font-size:29px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:3px;
+  color:var(--text);
+  text-transform:uppercase;
+}
+
+.brand span{
+  display:block;
+  color:var(--green);
+  font-size:10px;
+  letter-spacing:4px;
+  margin-top:9px;
+  font-weight:900;
+}
+
+.driver-label{
+  text-align:center;
+  color:#52616B;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:2.5px;
+  margin-top:9px;
+  text-transform:uppercase;
+}
+
+/* ================================
+   COMMON
+================================ */
+
+.primary{
+  width:100%;
+  padding:16px;
+  border:0;
+  border-radius:14px;
+  background:var(--green);
+  color:#fff;
+  font-size:15px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.primary:active{
+  transform:scale(.98);
+}
+
+.error{
+  display:none;
+  color:var(--red);
+  background:#FFF2F2;
+  border:1px solid #FFD4D4;
+  padding:11px;
+  border-radius:10px;
+  font-size:12px;
+  margin-bottom:12px;
+}
+
+/* ================================
+   SPLASH
+================================ */
+
+.splash{
+  width:100%;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  background:#fff;
+}
+
+.loader{
+  width:50px;
+  height:4px;
+  background:#E5E7EB;
+  border-radius:10px;
+  margin-top:32px;
+  overflow:hidden;
+}
+
+.loader-bar{
+  width:40%;
+  height:100%;
+  background:var(--green);
+  animation:loading 1.2s infinite;
+  border-radius:10px;
+}
+
+@keyframes loading{
+  0%{
+    transform:translateX(-150%);
+  }
+
+  100%{
+    transform:translateX(300%);
+  }
+}
+
+/* ================================
+   LANGUAGE
+================================ */
+
+.language{
+  width:100%;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:30px 20px;
+  background:#fff;
+}
+
+.language h1{
+  text-align:center;
+  font-size:28px;
+  margin-top:28px;
+}
+
+.language-sub{
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+  margin:10px 15px 28px;
+}
+
+.language-list{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.language-btn{
+  width:100%;
+  padding:17px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:15px;
+  cursor:pointer;
+}
+
+.language-btn:hover{
+  border-color:var(--green);
+  background:#F3FCF7;
+}
+
+.language-left{
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+
+.flag{
+  font-size:25px;
+}
+
+.language-name{
+  font-size:15px;
+  font-weight:900;
+}
+
+.arrow{
+  color:var(--green);
+  font-size:20px;
+  font-weight:900;
+}
+
+/* ================================
+   WELCOME
+================================ */
+
+.welcome{
+  width:100%;
+  min-height:100vh;
+  padding:35px 20px 30px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  background:linear-gradient(180deg,#F8FFFB 0%,#fff 60%);
+}
+
+.welcome h1{
+  text-align:center;
+  font-size:29px;
+  line-height:1.25;
+  margin-top:25px;
+}
+
+.welcome-description{
+  text-align:center;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.7;
+  margin:12px 12px 25px;
+}
+
+.feature{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:14px;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:15px;
+  margin-bottom:10px;
+  box-shadow:0 5px 18px rgba(0,0,0,.035);
+}
+
+.feature-icon{
+  width:43px;
+  height:43px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  background:#E9FAF2;
+  font-size:21px;
+}
+
+.feature-text{
+  font-size:13px;
+  font-weight:800;
+  line-height:1.45;
+}
+
+.welcome .primary{
+  margin-top:15px;
+}
+
+/* ================================
+   RULES
+================================ */
+
+.rules{
+  width:100%;
+  min-height:100vh;
+  padding:28px 18px 35px;
+  background:#fff;
+  overflow-y:auto;
+}
+
+.top-brand{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.top-brand .logo,
+.registration-header .logo{
+  width:65px;
+  height:65px;
+  border-radius:19px;
+}
+
+.top-brand .logo::before,
+.registration-header .logo::before{
+  width:28px;
+  height:37px;
+  border-width:6px;
+}
+
+.top-brand .logo::after,
+.registration-header .logo::after{
+  width:18px;
+  height:5px;
+  left:17px;
+  top:29px;
+  box-shadow:0 8px 0 rgba(255,255,255,.9);
+}
+
+.top-brand .brand{
+  font-size:21px;
+  letter-spacing:2.5px;
+  margin-top:11px;
+}
+
+.top-brand .brand span,
+.registration-header .brand span{
+  font-size:8px;
+  letter-spacing:3px;
+  margin-top:7px;
+}
+
+.rules h1{
+  font-size:28px;
+  margin-bottom:8px;
+}
+
+.rules-sub{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+  margin-bottom:20px;
+}
+
+.rules-card{
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:5px 16px;
+  background:#fff;
+}
+
+.rule{
+  display:flex;
+  gap:12px;
+  padding:15px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.rule:last-child{
+  border-bottom:0;
+}
+
+.rule-number{
+  width:30px;
+  height:30px;
+  min-width:30px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#E9FAF2;
+  color:var(--green);
+  font-size:13px;
+  font-weight:900;
+}
+
+.rule-title{
+  font-size:14px;
+  font-weight:900;
+}
+
+.rule-text{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+  margin-top:4px;
+}
+
+.commission{
+  margin-top:16px;
+  padding:16px;
+  background:#F0FBF5;
+  border:1px solid #CDEEDD;
+  border-radius:15px;
+}
+
+.commission-title{
+  color:var(--green-dark);
+  font-size:14px;
+  font-weight:900;
+}
+
+.commission-text{
+  color:#4B6357;
+  font-size:12px;
+  line-height:1.5;
+  margin-top:5px;
+}
+
+.check-row{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  margin:18px 2px;
+  color:#4B5563;
+  font-size:12px;
+  line-height:1.5;
+}
+
+.check-row input{
+  width:18px;
+  height:18px;
+  min-width:18px;
+  accent-color:var(--green);
+}
+
+/* ================================
+   REGISTRATION
+================================ */
+
+.registration{
+  width:100%;
+  min-height:100vh;
+  padding:28px 18px 40px;
+  background:#fff;
+  overflow-y:auto;
+}
+
+.registration-header{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.registration-header .brand{
+  font-size:23px;
+  letter-spacing:2.5px;
+}
+
+.registration-title{
+  font-size:28px;
+  font-weight:900;
+  margin-bottom:7px;
+}
+
+.registration-sub{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+  margin-bottom:20px;
+}
+
+.form-card{
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+  background:#fff;
+  margin-bottom:15px;
+}
+
+.form-title{
+  font-size:16px;
+  font-weight:900;
+  margin-bottom:15px;
+}
+
+.form-group{
+  margin-bottom:14px;
+}
+
+.form-label{
+  display:block;
+  color:#374151;
+  font-size:11px;
+  font-weight:900;
+  margin-bottom:7px;
+  text-transform:uppercase;
+}
+
+.form-input{
+  width:100%;
+  padding:15px;
+  border:1px solid var(--border);
+  border-radius:13px;
+  background:#F9FAFA;
+  color:var(--text);
+  outline:none;
+  font-size:14px;
+}
+
+.form-input:focus{
+  border-color:var(--green);
+  background:#fff;
+}
+
+/* VEHICLES */
+
+.vehicle-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+.vehicle-option{
+  padding:15px 8px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:#fff;
+  text-align:center;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.vehicle-option:hover{
+  border-color:var(--green);
+}
+
+.vehicle-option.active{
+  border-color:var(--green);
+  background:#F0FBF5;
+  box-shadow:0 0 0 2px rgba(24,184,106,.08);
+}
+
+.vehicle-option-icon{
+  font-size:27px;
+  margin-bottom:7px;
+}
+
+.vehicle-option-name{
+  font-size:12px;
+  font-weight:900;
+}
+
+.vehicle-check{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:900;
+  margin-top:5px;
+}
+
+.vehicle-option.active .vehicle-check{
+  color:var(--green-dark);
+}
+
+.vehicle-note{
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.5;
+  margin-top:12px;
+}
+
+.license-box{
+  padding:14px;
+  border-radius:14px;
+  background:#F0FBF5;
+  border:1px solid #CDEEDD;
+  margin-top:10px;
+}
+
+.license-title{
+  color:var(--green-dark);
+  font-size:13px;
+  font-weight:900;
+}
+
+.license-text{
+  color:#52645B;
+  font-size:11px;
+  line-height:1.5;
+  margin-top:5px;
+}
+
+/* ================================
+   SUCCESS
+================================ */
+
+.success{
+  width:100%;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:30px;
+  text-align:center;
+  background:#fff;
+}
+
+.success-icon{
+  width:85px;
+  height:85px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#E9FAF2;
+  color:var(--green);
+  font-size:42px;
+  margin-bottom:22px;
+}
+
+.success h1{
+  font-size:27px;
+  margin-bottom:10px;
+}
+
+.success p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+  margin-bottom:25px;
+}
+
+/* ================================
+   DASHBOARD
+================================ */
+
+.dashboard{
+  width:100%;
+  min-height:100vh;
+  background:#F5F8F7;
+  padding:22px 18px 85px;
+}
+
+.dashboard-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:22px;
+}
+
+.dashboard-brand{
+  font-size:21px;
+  font-weight:950;
+  letter-spacing:2px;
+  color:var(--text);
+  text-transform:uppercase;
+}
+
+.dashboard-brand span{
+  color:var(--green);
+  font-size:9px;
+  letter-spacing:2px;
+  margin-left:3px;
+}
+
+.dashboard-greeting{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:5px;
+}
+
+.profile-circle{
+  width:48px;
+  height:48px;
+  border-radius:16px;
+  background:linear-gradient(145deg,#19C875,#0EA85D);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  font-weight:950;
+  box-shadow:0 8px 20px rgba(22,184,106,.20);
+}
+
+.online-card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:14px;
+}
+
+.online-title{
+  font-size:12px;
+  color:var(--muted);
+  font-weight:800;
+}
+
+.online-status{
+  font-size:14px;
+  font-weight:900;
+  color:#6B7280;
+  margin-top:5px;
+}
+
+.status-button{
+  border:0;
+  border-radius:12px;
+  padding:12px 15px;
+  background:#E9FAF2;
+  color:var(--green-dark);
+  font-size:12px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.status-button.online{
+  background:var(--green);
+  color:#fff;
+}
+
+.earnings-card{
+  background:linear-gradient(145deg,#18C873,#0EA85D);
+  color:#fff;
+  border-radius:20px;
+  padding:22px;
+  margin-bottom:14px;
+  box-shadow:0 12px 30px rgba(24,184,106,.18);
+}
+
+.card-label{
+  font-size:11px;
+  font-weight:900;
+  opacity:.85;
+  letter-spacing:1px;
+}
+
+.earnings-value{
+  font-size:35px;
+  font-weight:900;
+  margin-top:8px;
+}
+
+.earnings-sub{
+  font-size:12px;
+  opacity:.85;
+  margin-top:4px;
+}
+
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-bottom:22px;
+}
+
+.stat-card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:15px;
+}
+
+.stat-icon{
+  font-size:22px;
+}
+
+.stat-value{
+  font-size:21px;
+  font-weight:900;
+  margin-top:8px;
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:3px;
+}
+
+.section-title{
+  font-size:17px;
+  font-weight:900;
+  margin-bottom:10px;
+}
+
+.empty-ride{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:30px 18px;
+  text-align:center;
+}
+
+.empty-icon{
+  font-size:38px;
+  margin-bottom:10px;
+}
+
+.empty-title{
+  font-size:15px;
+  font-weight:900;
+}
+
+.empty-text{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+  margin-top:6px;
+}
+
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:100%;
+  max-width:500px;
+  background:#fff;
+  border-top:1px solid var(--border);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  padding:9px 5px;
+  z-index:20;
+}
+
+.nav-item{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:800;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  cursor:pointer;
+}
+
+.nav-item span{
+  font-size:19px;
+}
+
+.nav-item.active{
+  color:var(--green);
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media(max-width:360px){
+
+  .brand{
+    font-size:25px;
+  }
+
+  .welcome h1,
+  .registration-title,
+  .rules h1{
+    font-size:25px;
+  }
+
+  .status-button{
+    padding:10px 11px;
+    font-size:11px;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- ================================
+     SPLASH
+================================ -->
+
+<section class="screen active" id="splashScreen">
+
+  <div class="splash">
+
+    <div class="logo"></div>
+
+    <div class="brand">
+      DRIVORA
+      <span>DRIVER</span>
+    </div>
+
+    <div class="driver-label">
+      Driver Partner App
+    </div>
+
+    <div class="loader">
+      <div class="loader-bar"></div>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================================
+     LANGUAGE
+================================ -->
+
+<section class="screen" id="languageScreen">
+
+  <div class="language">
+
+    <div class="logo"></div>
+
+    <div class="brand">
+      DRIVORA
+      <span>DRIVER</span>
+    </div>
+
+    <div class="driver-label">
+      Driver Partner App
+    </div>
+
+    <h1 id="languageTitle">
+      Select Language
+    </h1>
+
+    <p class="language-sub" id="languageSub">
+      Choose your preferred language to continue.
+    </p>
+
+    <div class="language-list">
+
+      <button class="language-btn"
+              onclick="selectLanguage('en')">
+
+        <div class="language-left">
+          <div class="flag">🇬🇧</div>
+          <div class="language-name">English</div>
+        </div>
+
+        <div class="arrow">›</div>
+
+      </button>
+
+
+      <button class="language-btn"
+              onclick="selectLanguage('te')">
+
+        <div class="language-left">
+          <div class="flag">🇮🇳</div>
+          <div class="language-name">తెలుగు</div>
+        </div>
+
+        <div class="arrow">›</div>
+
+      </button>
+
+
+      <button class="language-btn"
+              onclick="selectLanguage('hi')">
+
+        <div class="language-left">
+          <div class="flag">🇮🇳</div>
+          <div class="language-name">हिन्दी</div>
+        </div>
+
+        <div class="arrow">›</div>
+
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================================
+     WELCOME
+================================ -->
+
+<section class="screen" id="welcomeScreen">
+
+  <div class="welcome">
+
+    <div class="logo"></div>
+
+    <div class="brand">
+      DRIVORA
+      <span>DRIVER</span>
+    </div>
+
+    <div class="driver-label">
+      Driver Partner App
+    </div>
+
+    <h1 id="welcomeTitle">
+      Welcome, Driver Partner
+    </h1>
+
+    <p class="welcome-description"
+       id="welcomeDescription">
+      Join DRIVORA and provide professional driving services.
+    </p>
+
+
+    <div class="feature">
+
+      <div class="feature-icon">🚗</div>
+
+      <div class="feature-text"
+           id="feature1"></div>
+
+    </div>
+
+
+    <div class="feature">
+
+      <div class="feature-icon">💰</div>
+
+      <div class="feature-text"
+           id="feature2"></div>
+
+    </div>
+
+
+    <div class="feature">
+
+      <div class="feature-icon">🛡️</div>
+
+      <div class="feature-text"
+           id="feature3"></div>
+
+    </div>
+
+
+    <div class="feature">
+
+      <div class="feature-icon">⭐</div>
+
+      <div class="feature-text"
+           id="feature4"></div>
+
+    </div>
+
+
+    <button class="primary"
+            onclick="openRules()"
+            id="welcomeButton">
+
+      CONTINUE
+
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- ================================
+     RULES
+================================ -->
+
+<section class="screen" id="rulesScreen">
+
+  <div class="rules">
+
+    <div class="top-brand">
+
+      <div class="logo"></div>
+
+      <div class="brand">
+        DRIVORA
+        <span>DRIVER</span>
+      </div>
+
+    </div>
+
+
+    <h1 id="rulesTitle">
+      Driver Rules
+    </h1>
+
+    <p class="rules-sub"
+       id="rulesSub">
+      Please read and accept the rules before continuing.
+    </p>
+
+
+    <div class="rules-card">
+
+      <div class="rule">
+        <div class="rule-number">1</div>
+
+        <div>
+          <div class="rule-title"
+               id="ruleTitle1"></div>
+
+          <div class="rule-text"
+               id="ruleText1"></div>
+        </div>
+      </div>
+
+
+      <div class="rule">
+        <div class="rule-number">2</div>
+
+        <div>
+          <div class="rule-title"
+               id="ruleTitle2"></div>
+
+          <div class="rule-text"
+               id="ruleText2"></div>
+        </div>
+      </div>
+
+
+      <div class="rule">
+        <div class="rule-number">3</div>
+
+        <div>
+          <div class="rule-title"
+               id="ruleTitle3"></div>
+
+          <div class="rule-text"
+               id="ruleText3"></div>
+        </div>
+      </div>
+
+
+      <div class="rule">
+        <div class="rule-number">4</div>
+
+        <div>
+          <div class="rule-title"
+               id="ruleTitle4"></div>
+
+          <div class="rule-text"
+               id="ruleText4"></div>
+        </div>
+      </div>
+
+
+      <div class="rule">
+        <div class="rule-number">5</div>
+
+        <div>
+          <div class="rule-title"
+               id="ruleTitle5"></div>
+
+          <div class="rule-text"
+               id="ruleText5"></div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="commission">
+
+      <div class="commission-title"
+           id="commissionTitle"></div>
+
+      <div class="commission-text"
+           id="commissionText"></div>
+
+    </div>
+
+
+    <label class="check-row">
+
+      <input type="checkbox"
+             id="agreeCheck">
+
+      <span id="agreeText"></span>
+
+    </label>
+
+
+    <div class="error"
+         id="rulesError"></div>
+
+
+    <button class="primary"
+            onclick="acceptRules()"
+            id="rulesButton">
+
+      ACCEPT & CONTINUE
+
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- ================================
+     REGISTRATION
+================================ -->
+
+<section class="screen"
+         id="registrationScreen">
+
+  <div class="registration">
+
+    <div class="registration-header">
+
+      <div class="logo"></div>
+
+      <div class="brand">
+        DRIVORA
+        <span>DRIVER</span>
+      </div>
+
+      <div class="driver-label"
+           id="registrationLabel">
+        Driver Registration
+      </div>
+
+    </div>
+
+
+    <div class="registration-title"
+         id="registrationTitle">
+      Driver Registration
+    </div>
+
+
+    <div class="registration-sub"
+         id="registrationSub">
+          </div>
+
+
+    <!-- ================================
+         PERSONAL DETAILS
+    ================================ -->
+
+    <div class="form-card">
+
+      <div class="form-title" id="personalDetails">
+        Personal Details
+      </div>
+
+
+      <div class="form-group">
+
+        <label class="form-label" id="fullNameLabel">
+          Full Name
+        </label>
+
+        <input
+          class="form-input"
+          id="fullName"
+          type="text"
+          autocomplete="name"
+          placeholder="Enter full name">
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label class="form-label" id="mobileLabel">
+          Mobile Number
+        </label>
+
+        <input
+          class="form-input"
+          id="mobileNumber"
+          type="tel"
+          maxlength="10"
+          inputmode="numeric"
+          autocomplete="tel"
+          placeholder="Enter 10 digit mobile number">
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label class="form-label" id="dobLabel">
+          Date of Birth
+        </label>
+
+        <input
+          class="form-input"
+          id="dob"
+          type="date">
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label class="form-label" id="cityLabel">
+          City
+        </label>
+
+        <input
+          class="form-input"
+          id="city"
+          type="text"
+          autocomplete="address-level2"
+          placeholder="Enter your city">
+
+      </div>
+
+    </div>
+
+
+    <!-- ================================
+         DRIVING LICENCE
+    ================================ -->
+
+    <div class="form-card">
+
+      <div class="form-title" id="licenseTitle">
+        Driving Licence
+      </div>
+
+
+      <div class="form-group">
+
+        <label class="form-label" id="licenseNumberLabel">
+          Licence Number
+        </label>
+
+        <input
+          class="form-input"
+          id="licenseNumber"
+          type="text"
+          maxlength="20"
+          autocomplete="off"
+          placeholder="Enter driving licence number">
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label class="form-label" id="licenseIssueLabel">
+          Licence Issue Date
+        </label>
+
+        <input
+          class="form-input"
+          id="licenseIssueDate"
+          type="date">
+
+      </div>
+
+
+      <div class="license-box">
+
+        <div class="license-title"
+             id="experienceTitle">
+          ✓ 3 Years Experience Required
+        </div>
+
+        <div class="license-text"
+             id="experienceText">
+          Only drivers whose licence experience is at least
+          3 years can continue registration.
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================================
+         VEHICLES
+    ================================ -->
+
+    <div class="form-card">
+
+      <div class="form-title"
+           id="vehiclesTitle">
+        Vehicles You Can Drive
+      </div>
+
+
+      <div class="vehicle-grid">
+
+
+        <div
+          class="vehicle-option"
+          data-vehicle="Hatchback"
+          onclick="selectVehicle(this,'Hatchback')">
+
+          <div class="vehicle-option-icon">
+            🚗
+          </div>
+
+          <div class="vehicle-option-name"
+               id="hatchbackName">
+            Hatchback
+          </div>
+
+          <div class="vehicle-check">
+            Select
+          </div>
+
+        </div>
+
+
+        <div
+          class="vehicle-option"
+          data-vehicle="Sedan"
+          onclick="selectVehicle(this,'Sedan')">
+
+          <div class="vehicle-option-icon">
+            🚘
+          </div>
+
+          <div class="vehicle-option-name"
+               id="sedanName">
+            Sedan
+          </div>
+
+          <div class="vehicle-check">
+            Select
+          </div>
+
+        </div>
+
+
+        <div
+          class="vehicle-option"
+          data-vehicle="SUV"
+          onclick="selectVehicle(this,'SUV')">
+
+          <div class="vehicle-option-icon">
+            🚙
+          </div>
+
+          <div class="vehicle-option-name"
+               id="suvName">
+            SUV
+          </div>
+
+          <div class="vehicle-check">
+            Select
+          </div>
+
+        </div>
+
+
+        <div
+          class="vehicle-option"
+          data-vehicle="Luxury"
+          onclick="selectVehicle(this,'Luxury')">
+
+          <div class="vehicle-option-icon">
+            🏎️
+          </div>
+
+          <div class="vehicle-option-name"
+               id="luxuryName">
+            Luxury
+          </div>
+
+          <div class="vehicle-check">
+            Select
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="vehicle-note"
+           id="vehicleNote">
+        Select all vehicle types you are comfortable driving.
+      </div>
+
+    </div>
+
+
+    <div class="error"
+         id="registrationError">
+    </div>
+
+
+    <button
+      class="primary"
+      onclick="completeRegistration()"
+      id="registerButton">
+
+      CREATE DRIVER ACCOUNT
+
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- ================================
+     SUCCESS
+================================ -->
+
+<section
+  class="screen"
+  id="successScreen">
+
+  <div class="success">
+
+    <div class="success-icon">
+      ✓
+    </div>
+
+
+    <h1 id="successTitle">
+      Registration Complete
+    </h1>
+
+
+    <p id="successText">
+      Your DRIVORA Driver account has been created successfully.
+      You can now access your driver dashboard.
+    </p>
+
+
+    <button
+      class="primary"
+      onclick="openDashboard()"
+      id="dashboardButton">
+
+      GO TO DASHBOARD
+
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- ================================
+     DASHBOARD
+================================ -->
+
+<section
+  class="screen"
+  id="dashboardScreen">
+
+  <div class="dashboard">
+
+
+    <div class="dashboard-header">
+
+      <div>
+
+        <div class="dashboard-brand">
+          DRIVORA
+          <span>DRIVER</span>
+        </div>
+
+        <div
+          class="dashboard-greeting"
+          id="dashboardGreeting">
+
+          Welcome, Driver
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="profile-circle"
+        id="profileCircle">
+
+        D
+
+      </div>
+
+    </div>
+
+
+    <!-- ONLINE STATUS -->
+
+    <div class="online-card">
+
+      <div>
+
+        <div
+          class="online-title"
+          id="onlineTitle">
+
+          Driver Status
+
+        </div>
+
+        <div
+          class="online-status"
+          id="onlineStatus">
+
+          You are Offline
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="status-button"
+        id="statusButton"
+        onclick="toggleOnline()">
+
+        GO ONLINE
+
+      </button>
+
+    </div>
+
+
+    <!-- EARNINGS -->
+
+    <div class="earnings-card">
+
+      <div
+        class="card-label"
+        id="todayEarningsLabel">
+
+        TODAY'S EARNINGS
+
+      </div>
+
+
+      <div
+        class="earnings-value"
+        id="earningsValue">
+
+        ₹0
+
+      </div>
+
+
+      <div
+        class="earnings-sub"
+        id="earningsSub">
+
+        After commission
+
+      </div>
+
+    </div>
+
+
+    <!-- STATS -->
+
+    <div class="stats-grid">
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          🚗
+        </div>
+
+        <div
+          class="stat-value"
+          id="ridesValue">
+
+          0
+
+        </div>
+
+        <div
+          class="stat-label"
+          id="ridesLabel">
+
+          Today's Rides
+
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          ⭐
+        </div>
+
+        <div
+          class="stat-value"
+          id="ratingValue">
+
+          5.0
+
+        </div>
+
+        <div
+          class="stat-label"
+          id="ratingLabel">
+
+          Driver Rating
+
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          🕐
+        </div>
+
+        <div
+          class="stat-value"
+          id="hoursValue">
+
+          0h
+
+        </div>
+
+        <div
+          class="stat-label"
+          id="hoursLabel">
+
+          Online Hours
+
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          💰
+        </div>
+
+        <div
+          class="stat-value"
+          id="commissionValue">
+
+          10%
+
+        </div>
+
+        <div
+          class="stat-label"
+          id="commissionLabel">
+
+          Platform Commission
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- RECENT RIDES -->
+
+    <div
+      class="section-title"
+      id="ridesTitle">
+
+      Recent Rides
+
+    </div>
+
+
+    <div class="empty-ride">
+
+      <div class="empty-icon">
+        🚕
+      </div>
+
+
+      <div
+        class="empty-title"
+        id="emptyRideTitle">
+
+        No rides yet
+
+      </div>
+
+
+      <div
+        class="empty-text"
+        id="emptyRideText">
+
+        Go online to start receiving ride requests.
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================================
+       BOTTOM NAVIGATION
+  ================================ -->
+
+  <div class="bottom-nav">
+
+
+    <button
+      class="nav-item active"
+      onclick="dashboardNav('home',this)">
+
+      <span>🏠</span>
+
+      <div id="navHome">
+        Home
+      </div>
+
+    </button>
+
+
+    <button
+      class="nav-item"
+      onclick="dashboardNav('rides',this)">
+
+      <span>🚗</span>
+
+      <div id="navRides">
+        Rides
+      </div>
+
+    </button>
+
+
+    <button
+      class="nav-item"
+      onclick="dashboardNav('earnings',this)">
+
+      <span>💰</span>
+
+      <div id="navEarnings">
+        Earnings
+      </div>
+
+    </button>
+
+
+    <button
+      class="nav-item"
+      onclick="dashboardNav('profile',this)">
+
+      <span>👤</span>
+
+      <div id="navProfile">
+        Profile
+      </div>
+
+    </button>
+
+  </div>
+
+</section>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   DRIVORA DRIVER APP
+========================================= */
+
+let selectedLanguage = "en";
+
+let selectedVehicles = [];
+
+let isOnline = false;
+
+const COMMISSION_PERCENT = 10;
+
+
+/* =========================================
+   TRANSLATIONS
+========================================= */
+
+const translations = {
+
+  en: {
+
+    languageTitle:"Select Language",
+
+    languageSub:
+      "Choose your preferred language to continue.",
+
+    welcomeTitle:
+      "Welcome, Driver Partner",
+
+    welcomeDescription:
+      "Join DRIVORA and provide professional driving services.",
+
+    feature1:
+      "Get verified driving opportunities",
+
+    feature2:
+      "Earn money through professional driving",
+
+    feature3:
+      "Safe and trusted driver platform",
+
+    feature4:
+      "Build your driver rating and reputation",
+
+    welcomeButton:"CONTINUE",
+
+    rulesTitle:"Driver Rules",
+
+    rulesSub:
+      "Please read and accept the rules before continuing.",
+
+    rules:[
+
+      [
+        "Professional Behaviour",
+        "Always behave respectfully and professionally with customers."
+      ],
+
+      [
+        "Safe Driving",
+        "Follow traffic rules and maintain safe driving practices at all times."
+      ],
+
+      [
+        "Customer Safety",
+        "Customer safety and comfort must always be your first priority."
+      ],
+
+      [
+        "Vehicle Condition",
+        "Keep the vehicle clean, safe and properly maintained."
+      ],
+
+      [
+        "Account Responsibility",
+        "Do not share your driver account or accept rides outside the DRIVORA system."
+      ]
+
+    ],
+
+    commissionTitle:"Platform Commission",
+
+    commissionText:
+      "DRIVORA currently charges a 10% commission on completed ride earnings. Commission rates may be updated in the future according to platform policy.",
+
+    agreeText:
+      "I have read, understood and agree to follow all DRIVORA Driver Rules.",
+
+    rulesError:
+      "Please accept the driver rules to continue.",
+
+    rulesButton:
+      "ACCEPT & CONTINUE",
+
+    registrationLabel:
+      "Driver Registration",
+
+    registrationTitle:
+      "Driver Registration",
+
+    registrationSub:
+      "Enter your correct details to create your DRIVORA Driver account.",
+
+    personalDetails:
+      "Personal Details",
+
+    fullNameLabel:
+      "Full Name",
+
+    fullNamePlaceholder:
+      "Enter full name",
+
+    mobileLabel:
+      "Mobile Number",
+
+    mobilePlaceholder:
+      "Enter 10 digit mobile number",
+
+    dobLabel:
+      "Date of Birth",
+
+    cityLabel:
+      "City",
+
+    cityPlaceholder:
+      "Enter your city",
+
+    licenseTitle:
+      "Driving Licence",
+
+    licenseNumberLabel:
+      "Licence Number",
+
+    licenseNumberPlaceholder:
+      "Enter driving licence number",
+
+    licenseIssueLabel:
+      "Licence Issue Date",
+
+    experienceTitle:
+      "✓ 3 Years Experience Required",
+
+    experienceText:
+      "Only drivers whose licence experience is at least 3 years can continue registration.",
+
+    vehiclesTitle:
+      "Vehicles You Can Drive",
+
+    hatchbackName:"Hatchback",
+
+    sedanName:"Sedan",
+
+    suvName:"SUV",
+
+    luxuryName:"Luxury",
+
+    vehicleNote:
+      "Select all vehicle types you are comfortable driving.",
+
+    selectVehicle:
+      "Select",
+
+    selectedVehicle:
+      "✓ Selected",
+
+    registerButton:
+      "CREATE DRIVER ACCOUNT",
+
+    registrationError:
+      "Please fill all required details correctly.",
+
+    ageError:
+      "Driver must be at least 18 years old.",
+
+    futureLicenseError:
+      "Licence issue date cannot be in the future.",
+
+    experienceError:
+      "At least 3 years of driving licence experience is required.",
+
+    successTitle:
+      "Registration Complete",
+
+    successText:
+      "Your DRIVORA Driver account has been created successfully. You can now access your driver dashboard.",
+
+    dashboardButton:
+      "GO TO DASHBOARD",
+
+    dashboardWelcome:
+      "Welcome",
+
+    onlineTitle:
+      "Driver Status",
+
+    offline:
+      "You are Offline",
+
+    online:
+      "You are Online",
+
+    goOnline:
+      "GO ONLINE",
+
+    goOffline:
+      "GO OFFLINE",
+
+    todayEarningsLabel:
+      "TODAY'S EARNINGS",
+
+    earningsSub:
+      "After commission",
+
+    ridesLabel:
+      "Today's Rides",
+
+    ratingLabel:
+      "Driver Rating",
+
+    hoursLabel:
+      "Online Hours",
+
+    commissionLabel:
+      "Platform Commission",
+
+    ridesTitle:
+      "Recent Rides",
+
+    emptyRideTitle:
+      "No rides yet",
+
+    emptyRideText:
+      "Go online to start receiving ride requests.",
+
+    navHome:
+      "Home",
+
+    navRides:
+      "Rides",
+
+    navEarnings:
+      "Earnings",
+
+    navProfile:
+      "Profile"
+
+  },
+
+
+  te: {
+
+    languageTitle:
+      "భాషను ఎంచుకోండి",
+
+    languageSub:
+      "కొనసాగడానికి మీకు ఇష్టమైన భాషను ఎంచుకోండి.",
+
+    welcomeTitle:
+      "స్వాగతం డ్రైవర్ పార్ట్నర్",
+
+    welcomeDescription:
+      "DRIVORAలో చేరి ప్రొఫెషనల్ డ్రైవింగ్ సేవలను అందించండి.",
+
+    feature1:
+      "వెరిఫై చేయబడిన డ్రైవింగ్ అవకాశాలను పొందండి",
+
+    feature2:
+      "ప్రొఫెషనల్ డ్రైవింగ్ ద్వారా ఆదాయం పొందండి",
+
+    feature3:
+      "సురక్షితమైన మరియు నమ్మకమైన డ్రైవర్ ప్లాట్‌ఫామ్",
+
+    feature4:
+      "మీ డ్రైవర్ రేటింగ్ మరియు మంచి పేరు పెంచుకోండి",
+
+    welcomeButton:
+      "కొనసాగించండి",
+
+    rulesTitle:
+      "డ్రైవర్ నియమాలు",
+
+    rulesSub:
+      "కొనసాగించే ముందు నియమాలను చదివి అంగీకరించండి.",
+
+    rules:[
+
+      [
+        "వృత్తిపరమైన ప్రవర్తన",
+        "కస్టమర్లతో ఎల్లప్పుడూ గౌరవంగా మరియు ప్రొఫెషనల్‌గా ప్రవర్తించాలి."
+      ],
+
+      [
+        "సురక్షితమైన డ్రైవింగ్",
+        "ఎల్లప్పుడూ ట్రాఫిక్ నియమాలను పాటిస్తూ సురక్షితంగా డ్రైవ్ చేయాలి."
+      ],
+
+      [
+        "కస్టమర్ భద్రత",
+        "కస్టమర్ భద్రత మరియు సౌకర్యం ఎల్లప్పుడూ మీ మొదటి ప్రాధాన్యతగా ఉండాలి."
+      ],
+
+      [
+        "వాహనం పరిస్థితి",
+        "వాహనాన్ని శుభ్రంగా, సురక్షితంగా మరియు మంచి కండిషన్‌లో ఉంచాలి."
+      ],
+
+      [
+        "అకౌంట్ బాధ్యత",
+        "మీ డ్రైవర్ అకౌంట్‌ను ఇతరులతో షేర్ చేయకూడదు మరియు DRIVORA సిస్టమ్ బయట రైడ్స్ తీసుకోకూడదు."
+      ]
+
+    ],
+
+    commissionTitle:
+      "ప్లాట్‌ఫామ్ కమిషన్",
+
+    commissionText:
+      "ప్రస్తుతం పూర్తయిన రైడ్ ఆదాయంపై DRIVORA 10% కమిషన్ తీసుకుంటుంది. భవిష్యత్తులో ప్లాట్‌ఫామ్ పాలసీ ప్రకారం కమిషన్ మారవచ్చు.",
+
+    agreeText:
+      "నేను DRIVORA డ్రైవర్ నియమాలను చదివి, అర్థం చేసుకుని, పాటించడానికి అంగీకరిస్తున్నాను.",
+
+    rulesError:
+      "కొనసాగడానికి ముందుగా డ్రైవర్ నియమాలను అంగీకరించండి.",
+
+    rulesButton:
+      "అంగీకరించి కొనసాగించండి",
+
+    registrationLabel:
+      "డ్రైవర్ రిజిస్ట్రేషన్",
+
+    registrationTitle:
+      "డ్రైవర్ రిజిస్ట్రేషన్",
+
+    registrationSub:
+      "మీ DRIVORA Driver అకౌంట్ కోసం సరైన వివరాలను నమోదు చేయండి.",
+
+    personalDetails:
+      "వ్యక్తిగత వివరాలు",
+
+    fullNameLabel:
+      "పూర్తి పేరు",
+
+    fullNamePlaceholder:
+      "పూర్తి పేరు నమోదు చేయండి",
+
+    mobileLabel:
+      "మొబైల్ నంబర్",
+
+    mobilePlaceholder:
+      "10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి",
+
+    dobLabel:
+      "పుట్టిన తేదీ",
+
+    cityLabel:
+      "నగరం",
+
+    cityPlaceholder:
+      "మీ నగరం నమోదు చేయండి",
+
+    licenseTitle:
+      "డ్రైవింగ్ లైసెన్స్",
+
+    licenseNumberLabel:
+      "లైసెన్స్ నంబర్",
+
+    licenseNumberPlaceholder:
+      "డ్రైవింగ్ లైసెన్స్ నంబర్ నమోదు చేయండి",
+
+    licenseIssueLabel:
+      "లైసెన్స్ జారీ తేదీ",
+
+    experienceTitle:
+      "✓ 3 సంవత్సరాల డ్రైవింగ్ అనుభవం అవసరం",
+
+    experienceText:
+      "కనీసం 3 సంవత్సరాల లైసెన్స్ అనుభవం ఉన్న డ్రైవర్లు మాత్రమే రిజిస్ట్రేషన్ కొనసాగించగలరు.",
+
+    vehiclesTitle:
+      "మీరు నడపగల వాహనాలు",
+
+    hatchbackName:
+      "హ్యాచ్‌బ్యాక్",
+
+    sedanName:
+      "సెడాన్",
+
+    suvName:
+      "SUV",
+
+    luxuryName:
+      "లగ్జరీ",
+
+    vehicleNote:
+      "మీకు నమ్మకంగా నడపగల అన్ని వాహన రకాల్ని ఎంచుకోండి.",
+
+    selectVehicle:
+      "ఎంచుకోండి",
+
+    selectedVehicle:
+      "✓ ఎంచుకున్నారు",
+
+    registerButton:
+      "డ్రైవర్ అకౌంట్ సృష్టించండి",
+
+    registrationError:
+      "దయచేసి అవసరమైన అన్ని వివరాలను సరిగ్గా నమోదు చేయండి.",
+
+    ageError:
+      "డ్రైవర్ వయస్సు కనీసం 18 సంవత్సరాలు ఉండాలి.",
+
+    futureLicenseError:
+      "లైసెన్స్ జారీ తేదీ భవిష్యత్తులో ఉండకూడదు.",
+
+    experienceError:
+      "కనీసం 3 సంవత్సరాల డ్రైవింగ్ లైసెన్స్ అనుభవం అవసరం.",
+
+    successTitle:
+      "రిజిస్ట్రేషన్ పూర్తయింది",
+
+    successText:
+      "మీ DRIVORA Driver అకౌంట్ విజయవంతంగా సృష్టించబడింది. ఇప్పుడు మీ డ్రైవర్ డాష్‌బోర్డ్‌ను ఉపయోగించవచ్చు.",
+
+    dashboardButton:
+      "డాష్‌బోర్డ్‌కు వెళ్లండి",
+
+    dashboardWelcome:
+      "స్వాగతం",
+
+    onlineTitle:
+      "డ్రైవర్ స్టేటస్",
+
+    offline:
+      "మీరు ఆఫ్‌లైన్‌లో ఉన్నారు",
+
+    online:
+      "మీరు ఆన్‌లైన్‌లో ఉన్నారు",
+
+    goOnline:
+      "ఆన్‌లైన్‌కి వెళ్లండి",
+
+    goOffline:
+      "ఆఫ్‌లైన్‌కి వెళ్లండి",
+
+    todayEarningsLabel:
+      "ఈరోజు ఆదాయం",
+
+    earningsSub:
+      "కమిషన్ తీసివేసిన తర్వాత",
+
+    ridesLabel:
+      "ఈరోజు రైడ్స్",
+
+    ratingLabel:
+      "డ్రైవర్ రేటింగ్",
+
+    hoursLabel:
+      "ఆన్‌లైన్ గంటలు",
+
+    commissionLabel:
+      "ప్లాట్‌ఫామ్ కమిషన్",
+
+    ridesTitle:
+      "ఇటీవలి రైడ్స్",
+
+    emptyRideTitle:
+      "ఇంకా రైడ్స్ లేవు",
+
+    emptyRideText:
+      "రైడ్ రిక్వెస్టులు పొందడానికి ఆన్‌లైన్‌కి వెళ్లండి.",
+
+    navHome:
+      "హోమ్",
+
+    navRides:
+      "రైడ్స్",
+
+    navEarnings:
+      "ఆదాయం",
+
+    navProfile:
+      "ప్రొఫైల్"
+
+  },
+
+
+  hi: {
+
+    languageTitle:
+      "भाषा चुनें",
+
+    languageSub:
+      "जारी रखने के लिए अपनी पसंदीदा भाषा चुनें।",
+
+    welcomeTitle:
+      "स्वागत है ड्राइवर पार्टनर",
+
+    welcomeDescription:
+      "DRIVORA से जुड़ें और प्रोफेशनल ड्राइविंग सेवाएं प्रदान करें।",
+
+    feature1:
+      "सत्यापित ड्राइविंग अवसर प्राप्त करें",
+
+    feature2:
+      "प्रोफेशनल ड्राइविंग से कमाई करें",
+
+    feature3:
+      "सुरक्षित और भरोसेमंद ड्राइवर प्लेटफॉर्म",
+
+    feature4:
+      "अपनी ड्राइवर रेटिंग और प्रतिष्ठा बनाएं",
+
+    welcomeButton:
+      "जारी रखें",
+
+    rulesTitle:
+      "ड्राइवर नियम",
+
+    rulesSub:
+      "आगे बढ़ने से पहले नियम पढ़कर स्वीकार करें।",
+
+    rules: [
+
+      [
+        "व्यावसायिक व्यवहार",
+        "ग्राहकों के साथ हमेशा सम्मानजनक और प्रोफेशनल व्यवहार करें।"
+      ],
+
+      [
+        "सुरक्षित ड्राइविंग",
+        "हमेशा ट्रैफिक नियमों का पालन करें और सुरक्षित ड्राइविंग करें।"
+      ],
+
+      [
+        "ग्राहक सुरक्षा",
+        "ग्राहक की सुरक्षा और सुविधा हमेशा आपकी पहली प्राथमिकता होनी चाहिए।"
+      ],
+
+      [
+        "वाहन की स्थिति",
+        "वाहन को हमेशा साफ, सुरक्षित और अच्छी स्थिति में रखें।"
+      ],
+
+      [
+        "अकाउंट की जिम्मेदारी",
+        "अपना ड्राइवर अकाउंट किसी अन्य व्यक्ति के साथ शेयर न करें और DRIVORA सिस्टम के बाहर राइड स्वीकार न करें।"
+      ]
+
+    ],
+
+    commissionTitle:
+      "प्लेटफॉर्म कमीशन",
+
+    commissionText:
+      "वर्तमान में DRIVORA पूरी की गई राइड की कमाई पर 10% कमीशन लेता है। भविष्य में प्लेटफॉर्म नीति के अनुसार कमीशन बदला जा सकता है।",
+
+    agreeText:
+      "मैंने DRIVORA ड्राइवर नियम पढ़े और समझे हैं और मैं उनका पालन करने के लिए सहमत हूं।",
+
+    rulesError:
+      "आगे बढ़ने के लिए ड्राइवर नियम स्वीकार करें।",
+
+    rulesButton:
+      "स्वीकार करें और जारी रखें",
+
+    registrationLabel:
+      "ड्राइवर रजिस्ट्रेशन",
+
+    registrationTitle:
+      "ड्राइवर रजिस्ट्रेशन",
+
+    registrationSub:
+      "अपना DRIVORA Driver अकाउंट बनाने के लिए सही जानकारी दर्ज करें।",
+
+    personalDetails:
+      "व्यक्तिगत जानकारी",
+
+    fullNameLabel:
+      "पूरा नाम",
+
+    fullNamePlaceholder:
+      "पूरा नाम दर्ज करें",
+
+    mobileLabel:
+      "मोबाइल नंबर",
+
+    mobilePlaceholder:
+      "10 अंकों का मोबाइल नंबर दर्ज करें",
+
+    dobLabel:
+      "जन्म तिथि",
+
+    cityLabel:
+      "शहर",
+
+    cityPlaceholder:
+      "अपना शहर दर्ज करें",
+
+    licenseTitle:
+      "ड्राइविंग लाइसेंस",
+
+    licenseNumberLabel:
+      "लाइसेंस नंबर",
+
+    licenseNumberPlaceholder:
+      "ड्राइविंग लाइसेंस नंबर दर्ज करें",
+
+    licenseIssueLabel:
+      "लाइसेंस जारी होने की तारीख",
+
+    experienceTitle:
+      "✓ 3 साल का ड्राइविंग अनुभव आवश्यक",
+
+    experienceText:
+      "केवल वही ड्राइवर रजिस्ट्रेशन जारी रख सकते हैं जिनके ड्राइविंग लाइसेंस का अनुभव कम से कम 3 साल है।",
+
+    vehiclesTitle:
+      "आप कौन से वाहन चला सकते हैं",
+
+    hatchbackName:
+      "हैचबैक",
+
+    sedanName:
+      "सेडान",
+
+    suvName:
+      "SUV",
+
+    luxuryName:
+      "लक्ज़री",
+
+    vehicleNote:
+      "उन सभी वाहन प्रकारों को चुनें जिन्हें आप आराम से चला सकते हैं।",
+
+    selectVehicle:
+      "चुनें",
+
+    selectedVehicle:
+      "✓ चुना गया",
+
+    registerButton:
+      "ड्राइवर अकाउंट बनाएं",
+
+    registrationError:
+      "कृपया सभी आवश्यक जानकारी सही तरीके से भरें।",
+
+    ageError:
+      "ड्राइवर की उम्र कम से कम 18 वर्ष होनी चाहिए।",
+
+    futureLicenseError:
+      "लाइसेंस जारी होने की तारीख भविष्य की नहीं हो सकती।",
+
+    experienceError:
+      "कम से कम 3 साल का ड्राइविंग लाइसेंस अनुभव आवश्यक है।",
+
+    successTitle:
+      "रजिस्ट्रेशन पूरा हुआ",
+
+    successText:
+      "आपका DRIVORA Driver अकाउंट सफलतापूर्वक बनाया गया है। अब आप अपना ड्राइवर डैशबोर्ड इस्तेमाल कर सकते हैं।",
+
+    dashboardButton:
+      "डैशबोर्ड पर जाएं",
+
+    dashboardWelcome:
+      "स्वागत है",
+
+    onlineTitle:
+      "ड्राइवर स्टेटस",
+
+    offline:
+      "आप ऑफलाइन हैं",
+
+    online:
+      "आप ऑनलाइन हैं",
+
+    goOnline:
+      "ऑनलाइन जाएं",
+
+    goOffline:
+      "ऑफलाइन जाएं",
+
+    todayEarningsLabel:
+      "आज की कमाई",
+
+    earningsSub:
+      "कमीशन के बाद",
+
+    ridesLabel:
+      "आज की राइड्स",
+
+    ratingLabel:
+      "ड्राइवर रेटिंग",
+
+    hoursLabel:
+      "ऑनलाइन घंटे",
+
+    commissionLabel:
+      "प्लेटफॉर्म कमीशन",
+
+    ridesTitle:
+      "हाल की राइड्स",
+
+    emptyRideTitle:
+      "अभी कोई राइड नहीं है",
+
+    emptyRideText:
+      "राइड रिक्वेस्ट प्राप्त करने के लिए ऑनलाइन जाएं।",
+
+    navHome:
+      "होम",
+
+    navRides:
+      "राइड्स",
+
+    navEarnings:
+      "कमाई",
+
+    navProfile:
+      "प्रोफाइल"
+
+  }
+
+};
+
+
+/* =========================================
+   SCREEN CONTROL
+========================================= */
+
+function showScreen(id){
+
+  document.querySelectorAll(".screen").forEach(screen => {
+    screen.classList.remove("active");
+  });
+
+  const screen = document.getElementById(id);
+
+  if(screen){
+    screen.classList.add("active");
+  }
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+}
+
+
+/* =========================================
+   LANGUAGE SELECT
+========================================= */
+
+function selectLanguage(language){
+
+  if(!translations[language]){
+    language = "en";
+  }
+
+  selectedLanguage = language;
+
+  localStorage.setItem(
+    "drivoraLanguage",
+    language
+  );
+
+  applyLanguage();
+
+  showScreen("welcomeScreen");
+}
+
+
+/* =========================================
+   APPLY TRANSLATION
+========================================= */
+
+function applyLanguage(){
+
+  const t = translations[selectedLanguage];
+
+  if(!t) return;
+
+
+  /* LANGUAGE */
+
+  setText("languageTitle",t.languageTitle);
+  setText("languageSub",t.languageSub);
+
+
+  /* WELCOME */
+
+  setText("welcomeTitle",t.welcomeTitle);
+  setText("welcomeDescription",t.welcomeDescription);
+
+  setText("feature1",t.feature1);
+  setText("feature2",t.feature2);
+  setText("feature3",t.feature3);
+  setText("feature4",t.feature4);
+
+  setText("welcomeButton",t.welcomeButton);
+
+
+  /* RULES */
+
+  setText("rulesTitle",t.rulesTitle);
+  setText("rulesSub",t.rulesSub);
+
+  for(let i = 0; i < 5; i++){
+
+    setText(
+      "ruleTitle" + (i + 1),
+      t.rules[i][0]
+    );
+
+    setText(
+      "ruleText" + (i + 1),
+      t.rules[i][1]
+    );
+
+  }
+
+  setText(
+    "commissionTitle",
+    t.commissionTitle
+  );
+
+  setText(
+    "commissionText",
+    t.commissionText
+  );
+
+  setText(
+    "agreeText",
+    t.agreeText
+  );
+
+  setText(
+    "rulesButton",
+    t.rulesButton
+  );
+
+
+  /* REGISTRATION */
+
+  setText(
+    "registrationLabel",
+    t.registrationLabel
+  );
+
+  setText(
+    "registrationTitle",
+    t.registrationTitle
+  );
+
+  setText(
+    "registrationSub",
+    t.registrationSub
+  );
+
+  setText(
+    "personalDetails",
+    t.personalDetails
+  );
+
+  setText(
+    "fullNameLabel",
+    t.fullNameLabel
+  );
+
+  setText(
+    "mobileLabel",
+    t.mobileLabel
+  );
+
+  setText(
+    "dobLabel",
+    t.dobLabel
+  );
+
+  setText(
+    "cityLabel",
+    t.cityLabel
+  );
+
+  setText(
+    "licenseTitle",
+    t.licenseTitle
+  );
+
+  setText(
+    "licenseNumberLabel",
+    t.licenseNumberLabel
+  );
+
+  setText(
+    "licenseIssueLabel",
+    t.licenseIssueLabel
+  );
+
+  setText(
+    "experienceTitle",
+    t.experienceTitle
+  );
+
+  setText(
+    "experienceText",
+    t.experienceText
+  );
+
+  setText(
+    "vehiclesTitle",
+    t.vehiclesTitle
+  );
+
+  setText(
+    "hatchbackName",
+    t.hatchbackName
+  );
+
+  setText(
+    "sedanName",
+    t.sedanName
+  );
+
+  setText(
+    "suvName",
+    t.suvName
+  );
+
+  setText(
+    "luxuryName",
+    t.luxuryName
+  );
+
+  setText(
+    "vehicleNote",
+    t.vehicleNote
+  );
+
+  setText(
+    "registerButton",
+    t.registerButton
+  );
+
+
+  /* PLACEHOLDERS */
+
+  setPlaceholder(
+    "fullName",
+    t.fullNamePlaceholder
+  );
+
+  setPlaceholder(
+    "mobileNumber",
+    t.mobilePlaceholder
+  );
+
+  setPlaceholder(
+    "city",
+    t.cityPlaceholder
+  );
+
+  setPlaceholder(
+    "licenseNumber",
+    t.licenseNumberPlaceholder
+  );
+
+
+  /* SUCCESS */
+
+  setText(
+    "successTitle",
+    t.successTitle
+  );
+
+  setText(
+    "successText",
+    t.successText
+  );
+
+  setText(
+    "dashboardButton",
+    t.dashboardButton
+  );
+
+
+  /* DASHBOARD */
+
+  setText(
+    "onlineTitle",
+    t.onlineTitle
+  );
+
+  updateOnlineUI();
+
+  setText(
+    "todayEarningsLabel",
+    t.todayEarningsLabel
+  );
+
+  setText(
+    "earningsSub",
+    t.earningsSub
+  );
+
+  setText(
+    "ridesLabel",
+    t.ridesLabel
+  );
+
+  setText(
+    "ratingLabel",
+    t.ratingLabel
+  );
+
+  setText(
+    "hoursLabel",
+    t.hoursLabel
+  );
+
+  setText(
+    "commissionLabel",
+    t.commissionLabel
+  );
+
+  setText(
+    "ridesTitle",
+    t.ridesTitle
+  );
+
+  setText(
+    "emptyRideTitle",
+    t.emptyRideTitle
+  );
+
+  setText(
+    "emptyRideText",
+    t.emptyRideText
+  );
+
+  setText(
+    "navHome",
+    t.navHome
+  );
+
+  setText(
+    "navRides",
+    t.navRides
+  );
+
+  setText(
+    "navEarnings",
+    t.navEarnings
+  );
+
+  setText(
+    "navProfile",
+    t.navProfile
+  );
+
+}
+
+
+/* =========================================
+   TEXT HELPERS
+========================================= */
+
+function setText(id,value){
+
+  const element = document.getElementById(id);
+
+  if(element){
+    element.textContent = value;
+  }
+
+}
+
+
+function setPlaceholder(id,value){
+
+  const element = document.getElementById(id);
+
+  if(element){
+    element.placeholder = value;
+  }
+
+}
+
+
+/* =========================================
+   WELCOME → RULES
+========================================= */
+
+function openRules(){
+
+  hideError("rulesError");
+
+  document.getElementById("agreeCheck").checked = false;
+
+  showScreen("rulesScreen");
+
+}
+
+
+/* =========================================
+   ACCEPT RULES
+========================================= */
+
+function acceptRules(){
+
+  const checkbox =
+    document.getElementById("agreeCheck");
+
+  const error =
+    document.getElementById("rulesError");
+
+  const t =
+    translations[selectedLanguage];
+
+
+  if(!checkbox.checked){
+
+    error.textContent = t.rulesError;
+
+    error.style.display = "block";
+
+    return;
+  }
+
+
+  hideError("rulesError");
+
+  showScreen("registrationScreen");
+
+}
+
+
+/* =========================================
+   VEHICLE SELECTION
+========================================= */
+
+function selectVehicle(element,vehicle){
+
+  const index =
+    selectedVehicles.indexOf(vehicle);
+
+
+  if(index === -1){
+
+    selectedVehicles.push(vehicle);
+
+    element.classList.add("active");
+
+    const check =
+      element.querySelector(".vehicle-check");
+
+    if(check){
+      check.textContent =
+        translations[selectedLanguage].selectedVehicle;
+    }
+
+  }else{
+
+    selectedVehicles.splice(index,1);
+
+    element.classList.remove("active");
+
+    const check =
+      element.querySelector(".vehicle-check");
+
+    if(check){
+      check.textContent =
+        translations[selectedLanguage].selectVehicle;
+    }
+
+  }
+
+}
+
+
+/* =========================================
+   REGISTRATION VALIDATION
+========================================= */
+
+function completeRegistration(){
+
+  const t =
+    translations[selectedLanguage];
+
+  const error =
+    document.getElementById("registrationError");
+
+
+  const fullName =
+    document.getElementById("fullName")
+      .value.trim();
+
+  const mobile =
+    document.getElementById("mobileNumber")
+      .value.trim();
+
+  const dob =
+    document.getElementById("dob")
+      .value;
+
+  const city =
+    document.getElementById("city")
+      .value.trim();
+
+  const licenseNumber =
+    document.getElementById("licenseNumber")
+      .value.trim();
+
+  const licenseIssueDate =
+    document.getElementById("licenseIssueDate")
+      .value;
+
+
+  /* REQUIRED FIELDS */
+
+  if(
+    !fullName ||
+    !mobile ||
+    !dob ||
+    !city ||
+    !licenseNumber ||
+    !licenseIssueDate ||
+    selectedVehicles.length === 0
+  ){
+
+    showError(
+      "registrationError",
+      t.registrationError
+    );
+
+    return;
+  }
+
+
+  /* MOBILE VALIDATION */
+
+  if(!/^[6-9][0-9]{9}$/.test(mobile)){
+
+    showError(
+      "registrationError",
+      t.registrationError
+    );
+
+    return;
+  }
+
+
+  /* DATE OF BIRTH */
+
+  const birthDate =
+    new Date(dob);
+
+  const today =
+    new Date();
+
+  let age =
+    today.getFullYear() -
+    birthDate.getFullYear();
+
+  const monthDifference =
+    today.getMonth() -
+    birthDate.getMonth();
+
+
+  if(
+    monthDifference < 0 ||
+    (
+      monthDifference === 0 &&
+      today.getDate() < birthDate.getDate()
+    )
+  ){
+
+    age--;
+
+  }
+
+
+  if(age < 18){
+
+    showError(
+      "registrationError",
+      t.ageError
+    );
+
+    return;
+  }
+
+
+  /* LICENSE DATE */
+
+  const licenseDate =
+    new Date(licenseIssueDate);
+
+
+  if(licenseDate > today){
+
+    showError(
+      "registrationError",
+      t.futureLicenseError
+    );
+
+    return;
+  }
+
+
+  /* LICENSE EXPERIENCE */
+
+  const experienceYears =
+    (
+      today.getTime() -
+      licenseDate.getTime()
+    ) /
+    (
+      1000 *
+      60 *
+      60 *
+      24 *
+      365.25
+    );
+
+
+  if(experienceYears < 3){
+
+    showError(
+      "registrationError",
+      t.experienceError
+    );
+
+    return;
+  }
+
+
+  /* SAVE DRIVER */
+
+  const driver = {
+
+    name: fullName,
+
+    mobile: mobile,
+
+    dob: dob,
+
+    city: city,
+
+    licenseNumber: licenseNumber,
+
+    licenseIssueDate: licenseIssueDate,
+
+    vehicles: selectedVehicles,
+
+    language: selectedLanguage,
+
+    createdAt:
+      new Date().toISOString()
+
+  };
+
+
+  localStorage.setItem(
+    "drivoraDriver",
+    JSON.stringify(driver)
+  );
+
+
+  hideError("registrationError");
+
+  showScreen("successScreen");
+
+}
+
+
+/* =========================================
+   SUCCESS → DASHBOARD
+========================================= */
+
+function openDashboard(){
+
+  loadDriverData();
+
+  showScreen("dashboardScreen");
+
+}
+
+
+/* =========================================
+   LOAD DRIVER DATA
+========================================= */
+
+function loadDriverData(){
+
+  const saved =
+    localStorage.getItem("drivoraDriver");
+
+
+  if(!saved){
+
+    setText(
+      "dashboardGreeting",
+      translations[selectedLanguage].dashboardWelcome +
+      ", Driver"
+    );
+
+    return;
+  }
+
+
+  try{
+
+    const driver =
+      JSON.parse(saved);
+
+
+    const name =
+      driver.name || "Driver";
+
+
+    const firstName =
+      name.split(" ")[0];
+
+
+    setText(
+      "dashboardGreeting",
+      translations[selectedLanguage].dashboardWelcome +
+      ", " +
+      firstName
+    );
+
+
+    const profile =
+      document.getElementById("profileCircle");
+
+
+    if(profile){
+
+      profile.textContent =
+        firstName.charAt(0).toUpperCase();
+
+    }
+
+  }catch(error){
+
+    console.error(
+      "Driver data error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   ONLINE / OFFLINE
+========================================= */
+
+function toggleOnline(){
+
+  isOnline =
+    !isOnline;
+
+  localStorage.setItem(
+    "drivoraOnline",
+    isOnline ? "true" : "false"
+  );
+
+  updateOnlineUI();
+
+}
+
+
+/* =========================================
+   UPDATE ONLINE UI
+========================================= */
+
+function updateOnlineUI(){
+
+  const t =
+    translations[selectedLanguage];
+
+  const status =
+    document.getElementById("onlineStatus");
+
+  const button =
+    document.getElementById("statusButton");
+
+
+  if(!status || !button) return;
+
+
+  if(isOnline){
+
+    status.textContent =
+      t.online;
+
+    status.style.color =
+      "#0C9655";
+
+    button.textContent =
+      t.goOffline;
+
+    button.classList.add("online");
+
+  }else{
+
+    status.textContent =
+      t.offline;
+
+    status.style.color =
+      "#6B7280";
+
+    button.textContent =
+      t.goOnline;
+
+    button.classList.remove("online");
+
+  }
+
+}
+
+
+/* =========================================
+   DASHBOARD NAVIGATION
+========================================= */
+
+function dashboardNav(section,element){
+
+  document
+    .querySelectorAll(".nav-item")
+    .forEach(item => {
+
+      item.classList.remove("active");
+
+    });
+
+
+  if(element){
+
+    element.classList.add("active");
+
+  }
+
+
+  /*
+   * Dashboard sections can be connected
+   * to real pages later.
+   */
+
+  if(section === "home"){
+
+    return;
+  }
+
+
+  if(section === "rides"){
+
+    alert(
+      selectedLanguage === "te"
+        ? "రైడ్స్ విభాగం త్వరలో అందుబాటులోకి వస్తుంది."
+        : selectedLanguage === "hi"
+        ? "राइड्स सेक्शन जल्द उपलब्ध होगा।"
+        : "Rides section will be available soon."
+    );
+
+    return;
+  }
+
+
+  if(section === "earnings"){
+
+    alert(
+      selectedLanguage === "te"
+        ? "ఆదాయం విభాగం త్వరలో అందుబాటులోకి వస్తుంది."
+        : selectedLanguage === "hi"
+        ? "कमाई सेक्शन जल्द उपलब्ध होगा।"
+        : "Earnings section will be available soon."
+    );
+
+    return;
+  }
+
+
+  if(section === "profile"){
+
+    alert(
+      selectedLanguage === "te"
+        ? "ప్రొఫైల్ విభాగం త్వరలో అందుబాటులోకి వస్తుంది."
+        : selectedLanguage === "hi"
+        ? "प्रोफाइल सेक्शन जल्द उपलब्ध होगा।"
+        : "Profile section will be available soon."
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   ERROR HELPERS
+========================================= */
+
+function showError(id,message){
+
+  const element =
+    document.getElementById(id);
+
+  if(!element) return;
+
+  element.textContent =
+    message;
+
+  element.style.display =
+    "block";
+
+}
+
+
+function hideError(id){
+
+  const element =
+    document.getElementById(id);
+
+  if(element){
+
+    element.style.display =
+      "none";
+
+  }
+
+}
+
+
+/* =========================================
+   MOBILE NUMBER INPUT
+========================================= */
+
+document
+  .getElementById("mobileNumber")
+  .addEventListener("input",function(){
+
+    this.value =
+      this.value
+        .replace(/\D/g,"")
+        .slice(0,10);
+
+  });
+
+
+/* =========================================
+   LICENSE NUMBER
+========================================= */
+
+document
+  .getElementById("licenseNumber")
+  .addEventListener("input",function(){
+
+    this.value =
+      this.value
+        .toUpperCase()
+        .replace(/[^A-Z0-9 -]/g,"")
+        .slice(0,20);
+
+  });
+
+
+/* =========================================
+   PREVENT FUTURE DOB
+========================================= */
+
+function setDateLimits(){
+
+  const today =
+    new Date();
+
+  const yyyy =
+    today.getFullYear();
+
+  const mm =
+    String(today.getMonth()+1)
+      .padStart(2,"0");
+
+  const dd =
+    String(today.getDate())
+      .padStart(2,"0");
+
+  const todayString =
+    `${yyyy}-${mm}-${dd}`;
+
+
+  const dob =
+    document.getElementById("dob");
+
+  const license =
+    document.getElementById(
+      "licenseIssueDate"
+    );
+
+
+  if(dob){
+
+    dob.max =
+      todayString;
+
+  }
+
+
+  if(license){
+
+    license.max =
+      todayString;
+
+  }
+
+}
+
+
+/* =========================================
+   RESTORE SAVED STATE
+========================================= */
+
+function restoreApp(){
+
+  const savedLanguage =
+    localStorage.getItem(
+      "drivoraLanguage"
+    );
+
+
+  if(savedLanguage &&
+     translations[savedLanguage]){
+
+    selectedLanguage =
+      savedLanguage;
+
+  }
+
+
+  const savedOnline =
+    localStorage.getItem(
+      "drivoraOnline"
+    );
+
+
+  isOnline =
+    savedOnline === "true";
+
+
+  applyLanguage();
+
+  setDateLimits();
+
+
+  /*
+   * Splash screen
+   * automatically opens language
+   * screen after 1.8 seconds.
+   */
+
+  setTimeout(() => {
+
+    showScreen("languageScreen");
+
+  },1800);
+
+}
+
+
+/* =========================================
+   START APP
+========================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  restoreApp
+);
+
+</script>
+
+</body>
+</html>
