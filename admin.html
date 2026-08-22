@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DRIVORA Admin Panel</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#eef3f1;
+  color:#102019;
+}
+
+.header{
+  background:linear-gradient(135deg,#0b9d58,#16c875);
+  color:white;
+  padding:22px 18px;
+}
+
+.header h1{
+  font-size:25px;
+  letter-spacing:1px;
+}
+
+.header p{
+  margin-top:5px;
+  opacity:.9;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:18px;
+}
+
+.card{
+  background:white;
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:18px;
+  box-shadow:0 8px 25px rgba(0,0,0,.07);
+}
+
+.card h2{
+  font-size:20px;
+  margin-bottom:16px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-bottom:18px;
+}
+
+.stat{
+  background:white;
+  padding:18px 12px;
+  border-radius:16px;
+  text-align:center;
+  box-shadow:0 6px 18px rgba(0,0,0,.06);
+}
+
+.stat strong{
+  display:block;
+  font-size:27px;
+  color:#0b9d58;
+}
+
+.stat span{
+  font-size:13px;
+  color:#69736e;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+input,select{
+  width:100%;
+  padding:13px;
+  border:1px solid #dce4e0;
+  border-radius:10px;
+  outline:none;
+  background:#fafcfc;
+}
+
+input:focus,select:focus{
+  border-color:#16b86a;
+}
+
+.full{
+  grid-column:1/-1;
+}
+
+button{
+  border:0;
+  border-radius:10px;
+  padding:13px 17px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.add-btn{
+  width:100%;
+  background:#16b86a;
+  color:white;
+  margin-top:5px;
+}
+
+.add-btn:active{
+  transform:scale(.98);
+}
+
+.driver{
+  border:1px solid #e2e9e5;
+  border-radius:15px;
+  padding:16px;
+  margin-top:12px;
+}
+
+.driver-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.driver-name{
+  font-size:18px;
+  font-weight:bold;
+}
+
+.driver-info{
+  margin-top:8px;
+  color:#68736d;
+  line-height:1.7;
+  font-size:14px;
+}
+
+.status{
+  padding:6px 10px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.available{
+  background:#dcfce8;
+  color:#08763e;
+}
+
+.busy{
+  background:#fff1c7;
+  color:#916b00;
+}
+
+.offline{
+  background:#eceff1;
+  color:#626b70;
+}
+
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:13px;
+}
+
+.actions button{
+  font-size:12px;
+  padding:9px 11px;
+  background:#edf3f0;
+}
+
+.actions .delete{
+  background:#ffe3e3;
+  color:#c62828;
+}
+
+.empty{
+  text-align:center;
+  padding:25px 10px;
+  color:#7b8580;
+}
+
+@media(max-width:600px){
+  .stats{
+    grid-template-columns:1fr 1fr 1fr;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .full{
+    grid-column:auto;
+  }
+}
+
+@media(max-width:380px){
+  .stats{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <h1>DRIVORA</h1>
+  <p>Driver Supply Admin Panel</p>
+</header>
+
+<main class="container">
+
+  <!-- STATS -->
+
+  <section class="stats">
+    <div class="stat">
+      <strong id="totalDrivers">0</strong>
+      <span>Total Drivers</span>
+    </div>
+
+    <div class="stat">
+      <strong id="availableDrivers">0</strong>
+      <span>Available</span>
+    </div>
+
+    <div class="stat">
+      <strong id="busyDrivers">0</strong>
+      <span>Busy</span>
+    </div>
+  </section>
+
+  <!-- ADD DRIVER -->
+
+  <section class="card">
+
+    <h2>➕ Add Driver</h2>
+
+    <div class="form-grid">
+
+      <input
+        id="driverName"
+        type="text"
+        placeholder="Driver Name"
+      >
+
+      <input
+        id="driverPhone"
+        type="tel"
+        placeholder="Phone Number"
+        maxlength="10"
+      >
+
+      <input
+        id="driverVehicle"
+        type="text"
+        placeholder="Vehicle / Car Type"
+      >
+
+      <select id="driverStatus">
+        <option value="Available">Available</option>
+        <option value="Busy">Busy</option>
+        <option value="Offline">Offline</option>
+      </select>
+
+      <input
+        id="driverCity"
+        type="text"
+        placeholder="City"
+        class="full"
+      >
+
+      <button
+        class="add-btn full"
+        onclick="addDriver()"
+      >
+        ADD DRIVER
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- DRIVER LIST -->
+
+  <section class="card">
+
+    <h2>🚗 Driver List</h2>
+
+    <div id="driverList"></div>
+
+  </section>
+
+</main>
+
+<script>
+
+"use strict";
+
+/* =========================
+   DATA
+========================= */
+
+let drivers =
+  JSON.parse(localStorage.getItem("drivoraDrivers")) || [];
+
+
+/* =========================
+   SAVE DATA
+========================= */
+
+function saveDrivers(){
+
+  localStorage.setItem(
+    "drivoraDrivers",
+    JSON.stringify(drivers)
+  );
+
+}
+
+
+/* =========================
+   ADD DRIVER
+========================= */
+
+function addDriver(){
+
+  const name =
+    document.getElementById("driverName").value.trim();
+
+  const phone =
+    document.getElementById("driverPhone").value.trim();
+
+  const vehicle =
+    document.getElementById("driverVehicle").value.trim();
+
+  const status =
+    document.getElementById("driverStatus").value;
+
+  const city =
+    document.getElementById("driverCity").value.trim();
+
+
+  if(!name){
+
+    alert("Please enter driver name.");
+    return;
+
+  }
+
+
+  if(!/^[0-9]{10}$/.test(phone)){
+
+    alert("Please enter a valid 10 digit phone number.");
+    return;
+
+  }
+
+
+  if(!vehicle){
+
+    alert("Please enter vehicle details.");
+    return;
+
+  }
+
+
+  const existing =
+    drivers.some(
+      d => d.phone === phone
+    );
+
+
+  if(existing){
+
+    alert("This driver is already added.");
+    return;
+
+  }
+
+
+  const driver = {
+
+    id:
+      "DRV-" +
+      Date.now(),
+
+    name:name,
+
+    phone:phone,
+
+    vehicle:vehicle,
+
+    status:status,
+
+    city:city,
+
+    createdAt:
+      new Date().toISOString()
+
+  };
+
+
+  drivers.push(driver);
+
+  saveDrivers();
+
+  clearForm();
+
+  renderDrivers();
+
+  alert("Driver added successfully!");
+
+
+}
+
+
+/* =========================
+   CLEAR FORM
+========================= */
+
+function clearForm(){
+
+  document.getElementById("driverName").value = "";
+
+  document.getElementById("driverPhone").value = "";
+
+  document.getElementById("driverVehicle").value = "";
+
+  document.getElementById("driverCity").value = "";
+
+  document.getElementById("driverStatus").value =
+    "Available";
+
+}
+
+
+/* =========================
+   CHANGE STATUS
+========================= */
+
+function changeStatus(id,status){
+
+  const driver =
+    drivers.find(
+      d => d.id === id
+    );
+
+  if(!driver) return;
+
+  driver.status = status;
+
+  saveDrivers();
+
+  renderDrivers();
+
+}
+
+
+/* =========================
+   DELETE DRIVER
+========================= */
+
+function deleteDriver(id){
+
+  const driver =
+    drivers.find(
+      d => d.id === id
+    );
+
+  if(!driver) return;
+
+
+  const ok =
+    confirm(
+      "Delete " +
+      driver.name +
+      " from driver list?"
+    );
+
+
+  if(!ok) return;
+
+
+  drivers =
+    drivers.filter(
+      d => d.id !== id
+    );
+
+  saveDrivers();
+
+  renderDrivers();
+
+}
+
+
+/* =========================
+   CALL DRIVER
+========================= */
+
+function callDriver(phone){
+
+  window.location.href =
+    "tel:+91" + phone;
+
+}
+
+
+/* =========================
+   WHATSAPP DRIVER
+========================= */
+
+function whatsappDriver(phone){
+
+  window.open(
+    "https://wa.me/91" +
+    phone,
+    "_blank"
+  );
+
+}
+
+
+/* =========================
+   STATUS CLASS
+========================= */
+
+function statusClass(status){
+
+  if(status === "Available")
+    return "available";
+
+  if(status === "Busy")
+    return "busy";
+
+  return "offline";
+
+}
+
+
+/* =========================
+   RENDER DRIVERS
+========================= */
+
+function renderDrivers(){
+
+  const list =
+    document.getElementById("driverList");
+
+
+  list.innerHTML = "";
+
+
+  if(drivers.length === 0){
+
+    list.innerHTML =
+      '<div class="empty">' +
+      'No drivers added yet.' +
+      '</div>';
+
+    updateStats();
+
+    return;
+
+  }
+
+
+  drivers.forEach(driver => {
+
+    const div =
+      document.createElement("div");
+
+    div.className = "driver";
+
+
+    div.innerHTML = `
+
+      <div class="driver-top">
+
+        <div class="driver-name">
+          ${escapeHtml(driver.name)}
+        </div>
+
+        <span class="status ${statusClass(driver.status)}">
+          ${escapeHtml(driver.status)}
+        </span>
+
+      </div>
+
+      <div class="driver-info">
+
+        📞 ${escapeHtml(driver.phone)}<br>
+
+        🚗 ${escapeHtml(driver.vehicle)}<br>
+
+        📍 ${escapeHtml(driver.city || "Not specified")}<br>
+
+        🆔 ${escapeHtml(driver.id)}
+
+      </div>
+
+      <div class="actions">
+
+        <button
+          onclick="changeStatus('${driver.id}','Available')">
+          Available
+        </button>
+
+        <button
+          onclick="changeStatus('${driver.id}','Busy')">
+          Busy
+        </button>
+
+        <button
+          onclick="changeStatus('${driver.id}','Offline')">
+          Offline
+        </button>
+
+        <button
+          onclick="callDriver('${driver.phone}')">
+          Call
+        </button>
+
+        <button
+          onclick="whatsappDriver('${driver.phone}')">
+          WhatsApp
+        </button>
+
+        <button
+          class="delete"
+          onclick="deleteDriver('${driver.id}')">
+          Delete
+        </button>
+
+      </div>
+
+    `;
+
+
+    list.appendChild(div);
+
+  });
+
+
+  updateStats();
+
+}
+
+
+/* =========================
+   UPDATE STATS
+========================= */
+
+function updateStats(){
+
+  const total =
+    drivers.length;
+
+
+  const available =
+    drivers.filter(
+      d => d.status === "Available"
+    ).length;
+
+
+  const busy =
+    drivers.filter(
+      d => d.status === "Busy"
+    ).length;
+
+
+  document.getElementById(
+    "totalDrivers"
+  ).textContent = total;
+
+
+  document.getElementById(
+    "availableDrivers"
+  ).textContent = available;
+
+
+  document.getElementById(
+    "busyDrivers"
+  ).textContent = busy;
+
+}
+
+
+/* =========================
+   SECURITY
+========================= */
+
+function escapeHtml(value){
+
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+renderDrivers();
+
+</script>
+
+</body>
+      </html>
